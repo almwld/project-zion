@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'features/dashboard/cosmic_dashboard.dart';
+import 'zion_home.dart';
 
-class ZionApp extends StatelessWidget {
-  const ZionApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Project Zion',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: const Color(0xFFFF0000),
-        scaffoldBackgroundColor: const Color(0xFF0A0000),
-        fontFamily: 'monospace',
-      ),
-      home: const CosmicDashboard(),
-    );
+    return const ZionLauncher();
   }
 }
