@@ -3,12 +3,41 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:riverpod/riverpod.dart';
+import '../si_core.dart';
 
 final unifiedCoreProvider = Provider<UnifiedCoreService>((ref) => UnifiedCoreService());
 
 class UnifiedCoreService {
+  final SiCore _si = SiCore();
+  bool _siAwake = false;
+
   Future<String> execute(String command, {String? target, Map<String, String>? options}) async {
     try {
+      // أوامر Si
+      if (command == 'awaken' || command == 'start_ai') {
+        if (!_siAwake) {
+          _siAwake = true;
+          _si.awaken();
+          return 'Si استيقظ. الوعي الذاتي نشط.';
+        }
+        return 'Si مستيقظ بالفعل.';
+      }
+
+      if (command == 'si_status' || command == 'ai_status') {
+        return _si.getStatus().toString();
+      }
+
+      if (command == 'si_sleep' || command == 'stop_ai') {
+        _si.sleep();
+        _siAwake = false;
+        return 'Si نام.';
+      }
+
+      if (_siAwake) {
+        return await _si.executeUserCommand(command, target: target);
+      }
+
+      // الأوامر العادية
       switch (command) {
         case 'ping':
           return await _ping(target ?? '127.0.0.1');
@@ -23,7 +52,7 @@ class UnifiedCoreService {
         case 'help':
           return _helpText();
         default:
-          return 'Unknown command: $command\nType "help" for commands.';
+          return 'Unknown command: $command';
       }
     } catch (e) {
       return 'Error: $e';
@@ -34,9 +63,7 @@ class UnifiedCoreService {
     try {
       final result = await Process.run('ping', ['-c', '4', target], runInShell: true);
       return result.stdout.toString();
-    } catch (e) {
-      return 'Ping failed: $e';
-    }
+    } catch (e) { return 'Ping failed: $e'; }
   }
 
   Future<String> _portScan(String target) async {
@@ -56,9 +83,7 @@ class UnifiedCoreService {
     try {
       final addresses = await InternetAddress.lookup(domain);
       return 'DNS Lookup for $domain:\n${addresses.map((a) => '${a.address} (${a.type.name})').join('\n')}';
-    } catch (e) {
-      return 'DNS Lookup failed: $e';
-    }
+    } catch (e) { return 'DNS Lookup failed: $e'; }
   }
 
   Future<String> _httpHeaders(String url) async {
@@ -70,9 +95,7 @@ class UnifiedCoreService {
       final output = StringBuffer();
       headers.forEach((name, values) => output.writeln('$name: ${values.join(', ')}'));
       return 'HTTP Headers for $url:\n$output';
-    } catch (e) {
-      return 'HTTP Headers failed: $e';
-    }
+    } catch (e) { return 'HTTP Headers failed: $e'; }
   }
 
   String _systemInfo() => '''
@@ -84,13 +107,16 @@ System Information:
 ''';
 
   String _helpText() => '''
-=== PROJECT ZION ===
-ping <ip>        - Ping host
-port_scan <ip>   - Scan ports
-dns_lookup <d>   - DNS lookup
-http_headers <u> - HTTP headers
-system_info      - System info
-help             - Show help
-==================
+=== PROJECT ZION - Si CORE ===
+awaken / start_ai   - إيقاظ Si
+si_status / ai_status - حالة Si
+si_sleep / stop_ai   - إيقاف Si
+ping <ip>           - Ping
+port_scan <ip>      - فحص المنافذ
+dns_lookup <d>      - DNS
+http_headers <u>    - HTTP Headers
+system_info         - معلومات النظام
+help                - مساعدة
+===============================
 ''';
 }
