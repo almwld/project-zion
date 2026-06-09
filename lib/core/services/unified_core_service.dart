@@ -3,34 +3,44 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:riverpod/riverpod.dart';
-import '../si_core.dart';
+import '../self_evolving_si.dart';
 
 final unifiedCoreProvider = Provider<UnifiedCoreService>((ref) => UnifiedCoreService());
 
 class UnifiedCoreService {
-  final SiCore _si = SiCore();
+  final SelfEvolvingSi _si = SelfEvolvingSi();
   bool _siAwake = false;
 
   Future<String> execute(String command, {String? target, Map<String, String>? options}) async {
     try {
-      // أوامر Si
+      // أوامر Si المتقدمة
       if (command == 'awaken' || command == 'start_ai') {
         if (!_siAwake) {
           _siAwake = true;
           _si.awaken();
-          return 'Si استيقظ. الوعي الذاتي نشط.';
+          return '🧠 Si استيقظ. الوعي الذاتي نشط.';
         }
-        return 'Si مستيقظ بالفعل.';
+        return '🧠 Si مستيقظ بالفعل.';
+      }
+
+      if (command == 'evolve' || command == 'تطور') {
+        if (!_siAwake) return '⚠️ يجب إيقاظ Si أولاً. اكتب: awaken';
+        final result = await _si.evolve();
+        return '🧬 تطور Si:\n${const JsonEncoder.withIndent('  ').convert(result)}';
+      }
+
+      if (command == 'evolution_report' || command == 'تقرير_التطور') {
+        return const JsonEncoder.withIndent('  ').convert(_si.getEvolutionReport());
       }
 
       if (command == 'si_status' || command == 'ai_status') {
-        return _si.getStatus().toString();
+        return const JsonEncoder.withIndent('  ').convert(_si.getStatus());
       }
 
       if (command == 'si_sleep' || command == 'stop_ai') {
         _si.sleep();
         _siAwake = false;
-        return 'Si نام.';
+        return '😴 Si نام.';
       }
 
       if (_siAwake) {
@@ -107,16 +117,18 @@ System Information:
 ''';
 
   String _helpText() => '''
-=== PROJECT ZION - Si CORE ===
-awaken / start_ai   - إيقاظ Si
+=== PROJECT ZION - Si EVOLUTION ===
+awaken / start_ai     - إيقاظ Si
+evolve / تطور         - تطوير Si ذاتياً
+evolution_report      - تقرير التطور
 si_status / ai_status - حالة Si
-si_sleep / stop_ai   - إيقاف Si
-ping <ip>           - Ping
-port_scan <ip>      - فحص المنافذ
-dns_lookup <d>      - DNS
-http_headers <u>    - HTTP Headers
-system_info         - معلومات النظام
-help                - مساعدة
-===============================
+si_sleep / stop_ai    - إيقاف Si
+ping <ip>             - Ping
+port_scan <ip>        - فحص المنافذ
+dns_lookup <d>        - DNS
+http_headers <u>      - HTTP Headers
+system_info           - معلومات النظام
+help                  - مساعدة
+===================================
 ''';
 }

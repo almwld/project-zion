@@ -37,10 +37,8 @@ class _CosmicDashboardState extends ConsumerState<CosmicDashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // بطاقة Si
               _buildSiCard(),
               const SizedBox(height: 16),
-              // حقل الهدف
               Container(
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF00FF41).withOpacity(0.3)), color: const Color(0xFF0A0E0A).withOpacity(0.8)),
                 padding: const EdgeInsets.all(12),
@@ -48,30 +46,22 @@ class _CosmicDashboardState extends ConsumerState<CosmicDashboard> {
                   children: [
                     const Icon(Icons.my_location, color: Color(0xFF00FF41)),
                     const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        controller: _targetController,
-                        style: const TextStyle(color: Color(0xFF00FF41), fontFamily: 'monospace', fontSize: 16),
-                        decoration: const InputDecoration(border: InputBorder.none, hintText: 'أدخل عنوان الهدف...', hintStyle: TextStyle(color: Color(0xFF333333))),
-                      ),
-                    ),
+                    Expanded(child: TextField(controller: _targetController, style: const TextStyle(color: Color(0xFF00FF41), fontFamily: 'monospace', fontSize: 16), decoration: const InputDecoration(border: InputBorder.none, hintText: 'أدخل عنوان الهدف...', hintStyle: TextStyle(color: Color(0xFF333333))))),
                     _loading ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Color(0xFF00FF41))) : IconButton(icon: const Icon(Icons.play_circle_fill, color: Color(0xFF00FF41), size: 36), onPressed: () => _execute('port_scan')),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              // أزرار Si
-              const Text('🧠 Si - الذكاء الاصطناعي', style: TextStyle(color: Color(0xFF00FF41), fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text('🧠 Si - التطور الذاتي', style: TextStyle(color: Color(0xFF00FF41), fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Row(children: [
-                Expanded(child: ElevatedButton(onPressed: () => _execute('awaken'), style: ElevatedButton.styleFrom(backgroundColor: _siActive ? Colors.green.withOpacity(0.3) : const Color(0xFF00FF41), foregroundColor: _siActive ? Colors.green : Colors.black), child: Text(_siActive ? 'Si نشط' : 'إيقاظ Si'))),
-                const SizedBox(width: 8),
-                Expanded(child: ElevatedButton(onPressed: () => _execute('si_status'), style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.withOpacity(0.2), foregroundColor: Colors.blue), child: const Text('حالة Si'))),
-                const SizedBox(width: 8),
-                Expanded(child: ElevatedButton(onPressed: () => _execute('si_sleep'), style: ElevatedButton.styleFrom(backgroundColor: Colors.red.withOpacity(0.2), foregroundColor: Colors.red), child: const Text('إيقاف Si'))),
+              Wrap(spacing: 8, runSpacing: 8, children: [
+                _siBtn('🚀 إيقاظ', 'awaken', Colors.green),
+                _siBtn('🧬 تطور', 'evolve', Colors.purple),
+                _siBtn('📊 تقرير', 'evolution_report', Colors.blue),
+                _siBtn('📋 حالة', 'si_status', Colors.cyan),
+                _siBtn('😴 إيقاف', 'si_sleep', Colors.red),
               ]),
               const SizedBox(height: 16),
-              // أزرار الهجوم
               const Text('⚡ أوامر هجومية', style: TextStyle(color: Color(0xFF00FF41), fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Wrap(spacing: 8, runSpacing: 8, children: [
@@ -83,7 +73,6 @@ class _CosmicDashboardState extends ConsumerState<CosmicDashboard> {
                 _attackBtn('🆘 مساعدة', 'help', const Color(0xFF607D8B)),
               ]),
               const SizedBox(height: 16),
-              // الطرفية المصغرة
               Container(
                 width: double.infinity, height: 200, padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(color: const Color(0xFF050805).withOpacity(0.9), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF00FF41).withOpacity(0.2))),
@@ -99,15 +88,23 @@ class _CosmicDashboardState extends ConsumerState<CosmicDashboard> {
   Widget _buildSiCard() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), gradient: const LinearGradient(colors: [Color(0xFF0A1A0A), Color(0xFF050805)]), border: Border.all(color: (_siActive ? Colors.green : Colors.red).withOpacity(0.5))),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), gradient: const LinearGradient(colors: [Color(0xFF0A1A0A), Color(0xFF050805)]), border: Border.all(color: (_siActive ? Colors.purple : Colors.red).withOpacity(0.5))),
       child: Row(children: [
-        Icon(_siActive ? Icons.psychology : Icons.psychology_outlined, color: _siActive ? Colors.green : Colors.red, size: 40),
+        Icon(_siActive ? Icons.psychology : Icons.psychology_outlined, color: _siActive ? Colors.purple : Colors.red, size: 40),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(_siActive ? 'Si - نشط 🧠' : 'Si - خامل 💤', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-          Text(_siActive ? 'الوعي الذاتي يعمل. جاهز للهجوم.' : 'اضغط "إيقاظ Si" لبدء الذكاء الاصطناعي', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+          Text(_siActive ? 'Si - تطور ذاتي 🧬' : 'Si - خامل 💤', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(_siActive ? 'التطور الذاتي نشط. Si يتعلم ويُطور نفسه.' : 'اضغط "إيقاظ Si" لبدء الذكاء الاصطناعي المتطور', style: const TextStyle(color: Colors.grey, fontSize: 12)),
         ]),
       ]),
+    );
+  }
+
+  Widget _siBtn(String label, String command, Color color) {
+    return ElevatedButton(
+      onPressed: () => _execute(command),
+      style: ElevatedButton.styleFrom(backgroundColor: color.withOpacity(0.2), foregroundColor: color, side: BorderSide(color: color.withOpacity(0.3))),
+      child: Text(label, style: const TextStyle(fontSize: 12, fontFamily: 'monospace')),
     );
   }
 
