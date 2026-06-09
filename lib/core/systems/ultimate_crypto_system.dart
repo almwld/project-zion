@@ -32,7 +32,7 @@ class UltimateCryptoSystem {
     final p = _generateLargePrime(bits ~/ 2, random);
     final q = _generateLargePrime(bits ~/ 2, random);
     final n = p * q;
-    final phi = (p - 1) * (q - 1);
+    final phi = (p - BigInt.one) * (q - BigInt.one);
     final e = BigInt.from(65537);
     final d = _modInverse(e, phi);
 

@@ -7,29 +7,29 @@ class UltimateStealthSystem {
   String _currentUserAgent = '';
   String _currentFingerprint = '';
   int _mutationCount = 0;
-  bool _stealthMode = false;
+  bool _$stealthMode = false;
   final List<String> _proxyChain = [];
-  final Map<String, dynamic> _spoofedIdentity = {};
+  final Map<String, dynamic> _$spoofedIdentity = {};
 
   /// تفعيل وضع الشبح
   void enableStealthMode() {
-    _stealthMode = true;
-    _mutateIdentity();
+    _$stealthMode = true;
+    _$mutateIdentity();
     _rotateProxy();
   }
 
   /// تعطيل وضع الشبح
   void disableStealthMode() {
-    _stealthMode = false;
+    _$stealthMode = false;
     _proxyChain.clear();
   }
 
   /// تغيير الهوية بالكامل
-  void _mutateIdentity() {
+  void _$mutateIdentity() {
     _mutationCount++;
     _currentUserAgent = _generateRandomUserAgent();
     _currentFingerprint = _generateRandomFingerprint();
-    _spoofedIdentity = _generateSpoofedIdentity();
+    _$spoofedIdentity = _generateSpoofedIdentity();
   }
 
   /// تغيير البروكسي
@@ -43,7 +43,7 @@ class UltimateStealthSystem {
 
   /// الحصول على User-Agent الحالي
   String getUserAgent() {
-    if (_currentUserAgent.isEmpty) _mutateIdentity();
+    if (_currentUserAgent.isEmpty) _$mutateIdentity();
     return _currentUserAgent;
   }
 
@@ -109,7 +109,7 @@ class UltimateStealthSystem {
 
     for (final action in actions) {
       await action();
-      if (!_stealthMode) break;
+      if (!_$stealthMode) break;
     }
   }
 

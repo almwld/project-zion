@@ -61,8 +61,8 @@ class UltimateForensicsSystem {
       'modified': stat.modified.toIso8601String(),
       'accessed': stat.accessed.toIso8601String(),
       'permissions': stat.modeString(),
-      'owner': stat.gid,
-      'group': stat.gid,
+      'owner': stat.gid ?? 0,
+      'group': 0 ?? 0,
     };
 
     // تحليل EXIF (للصور)

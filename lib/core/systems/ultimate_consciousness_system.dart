@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:math';
-import 'ultimate_unified_command_system.dart';
+// import 'ultimate_unified_command_system.dart';
 import 'ultimate_ai_attack_system.dart';
 import 'ultimate_stealth_system.dart';
 
 class UltimateConsciousnessSystem {
-  final UltimateUnifiedCommandSystem _executor = UltimateUnifiedCommandSystem();
+  // final UltimateUnifiedCommandSystem _executor = UltimateUnifiedCommandSystem();
   final UltimateAiAttackSystem _brain = UltimateAiAttackSystem();
   final UltimateStealthSystem _stealth = UltimateStealthSystem();
 
