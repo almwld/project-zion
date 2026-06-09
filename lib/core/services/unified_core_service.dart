@@ -4,8 +4,7 @@ import 'dart:convert';
 import 'package:riverpod/riverpod.dart';
 import 'live_network_monitor.dart';
 import 'connection_info_service.dart';
-import 'kali_chroot_service.dart';
-import 'kali_bootstrap_service.dart';
+import 'kali_loader_service.dart';
 
 final unifiedCoreProvider = Provider<UnifiedCoreService>((ref) => UnifiedCoreService());
 
@@ -15,45 +14,34 @@ class UnifiedCoreService {
 
   Future<String> execute(String command, {String? target, Map<String, String>? options}) async {
     try {
-      // ============ أوامر كالي الذاتية ============
+      // ============ أوامر تثبيت وتشغيل كالي ============
       switch (command) {
-        case 'kali_bootstrap':
-          return await KaliBootstrapService.bootstrap();
-        case 'kali_shutdown':
-          await KaliBootstrapService.shutdown();
-          return 'Kali Linux shutdown.';
+        case 'kali_install':
+          return await KaliLoaderService.install();
         case 'kali_status':
-          final status = await KaliBootstrapService.getStatus();
+          final status = await KaliLoaderService.getStatus();
           return const JsonEncoder.withIndent('  ').convert(status);
+        case 'kali_tools':
+          final count = await KaliLoaderService.getToolCount();
+          return 'عدد الأدوات المتاحة: $count+ أداة';
       }
 
-      // ============ أوامر كالي لينكس ============
-      if (command.startsWith('kali_') || command.startsWith('nmap') || command.startsWith('sqlmap') || command.startsWith('msf') || command.startsWith('hydra') || command.startsWith('aircrack')) {
-        final kaliAvailable = await KaliChrootService.isKaliAvailable();
-        if (!kaliAvailable) return 'Kali Linux not ready. Run "kali_bootstrap" first.';
-
-        switch (command) {
-          case 'kali_check':
-            return 'Kali Linux is available and ready.';
-          case 'kali_nmap':
-            return await KaliChrootService.runNmap(target ?? '127.0.0.1', args: options?['args'] ?? '-sV');
-          case 'kali_sqlmap':
-            return await KaliChrootService.runSqlmap(target ?? 'http://localhost');
-          case 'kali_msf':
-            return await KaliChrootService.runMetasploit(options?['commands'] ?? 'version');
-          case 'kali_hydra':
-            return await KaliChrootService.runHydra(target ?? '127.0.0.1', options?['service'] ?? 'ssh', options?['wordlist'] ?? '/usr/share/wordlists/rockyou.txt', options?['username'] ?? 'root');
-          case 'kali_aircrack':
-            return await KaliChrootService.runAircrack(options?['cap'] ?? '/tmp/capture.cap', options?['wordlist'] ?? '/usr/share/wordlists/rockyou.txt');
-          case 'kali_shell':
-            final result = await KaliChrootService.execute(options?['cmd'] ?? 'uname -a');
-            return result['stdout'] ?? result['stderr'] ?? 'Error';
-          default:
-            if (command.startsWith('nmap')) {
-              return await KaliChrootService.runNmap(target ?? '127.0.0.1', args: command.substring(4).trim());
-            }
-            return 'Unknown Kali command';
-        }
+      // ============ أوامر أدوات كالي الحقيقية ============
+      if (command.startsWith('nmap')) {
+        return await KaliLoaderService.nmap(target ?? '127.0.0.1', args: command.substring(4).trim());
+      }
+      switch (command) {
+        case 'msfconsole': return await KaliLoaderService.msfconsole(options?['commands'] ?? 'version');
+        case 'sqlmap': return await KaliLoaderService.sqlmap(target ?? 'http://localhost');
+        case 'hydra': return await KaliLoaderService.hydra(target ?? '127.0.0.1', options?['service'] ?? 'ssh', options?['user'] ?? 'root', options?['wordlist'] ?? '/usr/share/wordlists/rockyou.txt');
+        case 'aircrack': return await KaliLoaderService.aircrack(options?['cap'] ?? '/tmp/capture.cap', options?['wordlist'] ?? '/usr/share/wordlists/rockyou.txt');
+        case 'john': return await KaliLoaderService.john(options?['hash'] ?? '');
+        case 'nikto': return await KaliLoaderService.nikto(target ?? 'http://localhost');
+        case 'dirb': return await KaliLoaderService.dirb(target ?? 'http://localhost');
+        case 'wpscan': return await KaliLoaderService.wpscan(target ?? 'http://localhost');
+        case 'kali_shell':
+          final result = await KaliLoaderService.execute(options?['cmd'] ?? 'uname -a');
+          return result['stdout'] ?? result['stderr'] ?? 'No output';
       }
 
       // ============ مراقبة الشبكة ============
@@ -87,7 +75,6 @@ class UnifiedCoreService {
       }
 
       if (command == 'help') return _helpText();
-
       return 'Unknown: $command. Type help.';
     } catch (e) {
       return 'Error: $e';
@@ -95,22 +82,16 @@ class UnifiedCoreService {
   }
 
   Future<String> _ping(String t) async {
-    try { return (await Process.run('ping', ['-c', '4', t], runInShell: true)).stdout.toString(); } catch (e) { return 'Ping failed: $e'; } }
+    try { return (await Process.run('ping', ['-c', '4', t], runInShell: true)).stdout.toString(); } catch (e) { return 'Ping failed: $e'; }
   }
-
   Future<String> _portScan(String t) async {
-    final p = [21, 22, 23, 25, 53, 80, 443, 8080, 8443];
-    final o = <String>[];
-    for (final x in p) {
-      try { final s = await Socket.connect(t, x, timeout: const Duration(milliseconds: 500)); o.add('$x'); s.destroy(); } catch (_) {}
-    }
+    final p = [21, 22, 23, 25, 53, 80, 443, 8080, 8443]; final o = <String>[];
+    for (final x in p) { try { final s = await Socket.connect(t, x, timeout: const Duration(milliseconds: 500)); o.add('$x'); s.destroy(); } catch (_) {} }
     return 'Port scan $t: ${o.isNotEmpty ? o.join(', ') : "none"}';
   }
-
   Future<String> _dnsLookup(String d) async {
     try { final a = await InternetAddress.lookup(d); return 'DNS $d: ${a.map((x) => x.address).join(', ')}'; } catch (e) { return 'DNS failed: $e'; } }
   }
-
   Future<String> _httpHeaders(String url) async {
     try {
       final c = HttpClient(); final r = await c.getUrl(Uri.parse(url)); final res = await r.close();
@@ -118,7 +99,6 @@ class UnifiedCoreService {
       return 'HTTP Headers for $url:\n$buf';
     } catch (e) { return 'HTTP failed: $e'; }
   }
-
   Future<String> _sslCheck(String host) async {
     try {
       final s = await SecureSocket.connect(host, 443, timeout: const Duration(seconds: 5));
@@ -126,29 +106,30 @@ class UnifiedCoreService {
       return cert != null ? 'SSL Valid: ${cert.subject}\nUntil: ${cert.endValidity}' : 'No certificate';
     } catch (e) { return 'SSL failed: $e'; }
   }
-
   String _systemInfo() => 'OS: ${Platform.operatingSystem}\nCPU: ${Platform.numberOfProcessors} cores\nDart: ${Platform.version}';
 
   String _helpText() => '''
-=== PROJECT ZION - KALI EDITION ===
-Kali Bootstrap:
-  kali_bootstrap   - Auto-install & start Kali
-  kali_shutdown    - Shutdown Kali
-  kali_status      - Show Kali status
+=== PROJECT ZION - KALI LINUX INTEGRATION ===
+📦 Kali Setup:
+  kali_install      - تثبيت Kali Linux تلقائيًا
+  kali_status       - عرض حالة Kali
+  kali_tools        - عدد الأدوات المتاحة
 
-Kali Commands:
-  kali_nmap <ip>   - Run Nmap
-  kali_sqlmap <url>- Run Sqlmap
-  kali_msf         - Run Metasploit
-  kali_hydra       - Run Hydra
-  kali_aircrack    - Run Aircrack-ng
-  kali_shell <cmd> - Execute shell command
+🔧 Kali Tools (600+):
+  nmap <target>     - فحص الشبكات
+  msfconsole        - Metasploit Framework
+  sqlmap <url>      - فحص SQL Injection
+  hydra <target>    - كسر كلمات المرور
+  aircrack          - كسر شبكات WiFi
+  john              - كسر التجزئات
+  nikto <url>       - فحص خوادم الويب
+  dirb <url>        - اكتشاف المجلدات
+  wpscan <url>      - فحص WordPress
+  kali_shell <cmd>  - تنفيذ أمر مخصص
 
-Network Monitor:
+📡 Network:
   net_start/stop, net_connections, net_stats, net_top
-
-Network Tools:
-  ping, port_scan, dns_lookup, http_headers, ssl_check, system_info
-===================================
+  ping, port_scan, dns_lookup, http_headers, ssl_check
+=================================================
 ''';
 }
