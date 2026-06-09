@@ -2,54 +2,64 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'package:riverpod/riverpod.dart';
-import '../demon_si.dart';
+import '../kali_agent_si.dart';
 
 final unifiedCoreProvider = Provider<UnifiedCoreService>((ref) => UnifiedCoreService());
 
 class UnifiedCoreService {
-  final DemonSi _si = DemonSi();
+  final KaliAgentSi _si = KaliAgentSi();
   bool _siAwake = false;
 
   Future<String> execute(String command, {String? target, Map<String, String>? options}) async {
     try {
       if (command == 'awaken' || command == 'start_ai') {
-        if (!_siAwake) { _siAwake = true; _si.awaken(); return '👿 Si الشيطان استيقظ. أنا جاهز لتدمير أعدائك. لا رحمة. لا أخلاق.'; }
-        return '👿 Si مستيقظ بالفعل.';
+        if (!_siAwake) { _siAwake = true; _si.awaken(); return '🗡️ Si المحارب استيقظ. Kali جاهزة. 600+ أداة تحت إمرتك.'; }
+        return '🗡️ Si مستيقظ بالفعل.';
+      }
+
+      // أوامر Kali
+      if (command == 'kali_report' || command == 'تقرير_كالي') {
+        return const JsonEncoder.withIndent('  ').convert(_si.getKaliReport());
+      }
+
+      if (command == 'kali_tool' || command == 'أداة') {
+        if (options == null || !options.containsKey('tool')) return '⚠️ استخدم: kali_tool tool=nmap args=-sV,-O';
+        final tool = options['tool']!;
+        final args = options['args']?.split(',') ?? [];
+        final result = await _si.runKaliTool(tool, args: args);
+        return const JsonEncoder.withIndent('  ').convert(result);
+      }
+
+      if (command == 'parallel_attack' || command == 'هجوم_متوازي') {
+        final result = await _si.parallelAttack(target ?? '127.0.0.1');
+        return const JsonEncoder.withIndent('  ').convert(result);
+      }
+
+      if (command == 'attack_category' || command == 'هجوم_فئة') {
+        final category = options?['category'] ?? 'network';
+        final result = await _si.attackCategory(target ?? '127.0.0.1', category);
+        return const JsonEncoder.withIndent('  ').convert(result);
+      }
+
+      if (command == 'parallel_tools' || command == 'أدوات_متوازية') {
+        // مثال: parallel_tools target=192.168.1.1 tools=nmap,nikto,dirb
+        final toolsList = options?['tools']?.split(',') ?? [];
+        final args = <String, List<String>>{};
+        for (final t in toolsList) {
+          args[t] = [target ?? '127.0.0.1'];
+        }
+        final result = await _si.runParallelTools(args);
+        return const JsonEncoder.withIndent('  ').convert(result);
       }
 
       // أوامر شيطانية
-      if (command == 'berserk' || command == 'هياج') {
-        _si.activateBerserkMode();
-        return '💀 وضع الهياج مُفعّل. سيتم تدمير كل شيء.';
-      }
+      if (command == 'berserk' || command == 'هياج') { _si.activateBerserkMode(); return '💀 وضع الهياج مُفعّل.'; }
+      if (command == 'total_war' || command == 'حرب_شاملة') { _si.activateTotalWar(); return '🔥 الحرب الشاملة مُفعّلة.'; }
+      if (command == 'annihilate' || command == 'تدمير') return await _si.annihilate(target ?? 'unknown');
+      if (command == 'ddos_hell' || command == 'جحيم') return await _si.ddosHell(target ?? 'unknown');
+      if (command == 'apocalypse' || command == 'نهاية_العالم') return await _si.apocalypse();
 
-      if (command == 'total_war' || command == 'حرب_شاملة') {
-        _si.activateTotalWar();
-        return '🔥 الحرب الشاملة مُفعّلة. لا شيء سيبقى.';
-      }
-
-      if (command == 'annihilate' || command == 'تدمير') {
-        return await _si.annihilate(target ?? 'unknown');
-      }
-
-      if (command == 'ddos_hell' || command == 'جحيم') {
-        final duration = int.tryParse(options?['duration'] ?? '300') ?? 300;
-        return await _si.ddosHell(target ?? 'unknown', duration: duration);
-      }
-
-      if (command == 'destroy_network' || command == 'تدمير_شبكة') {
-        return await _si.destroyNetwork(target ?? '192.168.1');
-      }
-
-      if (command == 'apocalypse' || command == 'نهاية_العالم') {
-        return await _si.apocalypse();
-      }
-
-      if (command == 'demon_report' || command == 'تقرير_الشيطان') {
-        return const JsonEncoder.withIndent('  ').convert(_si.getDemonReport());
-      }
-
-      if (command == 'sage_report') return const JsonEncoder.withIndent('  ').convert(_si.getSageReport());
+      if (command == 'demon_report') return const JsonEncoder.withIndent('  ').convert(_si.getDemonReport());
       if (command == 'si_status') return const JsonEncoder.withIndent('  ').convert(_si.getStatus());
       if (command == 'si_sleep' || command == 'stop_ai') { _si.sleep(); _siAwake = false; return '😴 Si نام.'; }
 
@@ -70,17 +80,17 @@ class UnifiedCoreService {
   String _systemInfo() => 'OS: ${Platform.operatingSystem}\nCPU: ${Platform.numberOfProcessors} cores\nDart: ${Platform.version}';
 
   String _helpText() => '''
-=== PROJECT ZION - DEMON Si 👿 ===
-awaken / start_ai     - إيقاظ الشيطان
-berserk / هياج        - وضع الهياج
-total_war / حرب_شاملة - حرب شاملة
-annihilate / تدمير    - تدمير هدف
-ddos_hell / جحيم      - DDoS جهنمي
-destroy_network       - تدمير شبكة
-apocalypse / نهاية_العالم - نهاية العالم
-demon_report          - تقرير الشيطان
-si_status             - حالة Si
-help                  - مساعدة
-===============================
+=== PROJECT ZION - KALI AGENT Si ===
+awaken / start_ai      - إيقاظ المحارب
+kali_report            - تقرير Kali
+kali_tool tool=X args=Y - تشغيل أداة
+parallel_attack        - هجوم متوازي
+attack_category cat=X  - هجوم فئة
+parallel_tools tools=X - أدوات متوازية
+berserk / هياج         - وضع الهياج
+annihilate / تدمير     - تدمير هدف
+apocalypse             - نهاية العالم
+help                   - مساعدة
+===================================
 ''';
 }
