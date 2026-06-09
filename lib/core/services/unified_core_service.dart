@@ -5,6 +5,7 @@ import 'package:riverpod/riverpod.dart';
 import 'live_network_monitor.dart';
 import 'connection_info_service.dart';
 import 'kali_chroot_service.dart';
+import 'kali_bootstrap_service.dart';
 
 final unifiedCoreProvider = Provider<UnifiedCoreService>((ref) => UnifiedCoreService());
 
@@ -14,10 +15,22 @@ class UnifiedCoreService {
 
   Future<String> execute(String command, {String? target, Map<String, String>? options}) async {
     try {
+      // ============ أوامر كالي الذاتية ============
+      switch (command) {
+        case 'kali_bootstrap':
+          return await KaliBootstrapService.bootstrap();
+        case 'kali_shutdown':
+          await KaliBootstrapService.shutdown();
+          return 'Kali Linux shutdown.';
+        case 'kali_status':
+          final status = await KaliBootstrapService.getStatus();
+          return const JsonEncoder.withIndent('  ').convert(status);
+      }
+
       // ============ أوامر كالي لينكس ============
       if (command.startsWith('kali_') || command.startsWith('nmap') || command.startsWith('sqlmap') || command.startsWith('msf') || command.startsWith('hydra') || command.startsWith('aircrack')) {
         final kaliAvailable = await KaliChrootService.isKaliAvailable();
-        if (!kaliAvailable) return 'Kali Linux chroot not found at ${KaliChrootService._chrootPath}';
+        if (!kaliAvailable) return 'Kali Linux not ready. Run "kali_bootstrap" first.';
 
         switch (command) {
           case 'kali_check':
@@ -36,7 +49,6 @@ class UnifiedCoreService {
             final result = await KaliChrootService.execute(options?['cmd'] ?? 'uname -a');
             return result['stdout'] ?? result['stderr'] ?? 'Error';
           default:
-            // إذا كان الأمر يبدأ بـ "nmap" مباشرة
             if (command.startsWith('nmap')) {
               return await KaliChrootService.runNmap(target ?? '127.0.0.1', args: command.substring(4).trim());
             }
@@ -83,7 +95,7 @@ class UnifiedCoreService {
   }
 
   Future<String> _ping(String t) async {
-    try { return (await Process.run('ping', ['-c', '4', t], runInShell: true)).stdout.toString(); } catch (e) { return 'Ping failed: $e'; }
+    try { return (await Process.run('ping', ['-c', '4', t], runInShell: true)).stdout.toString(); } catch (e) { return 'Ping failed: $e'; } }
   }
 
   Future<String> _portScan(String t) async {
@@ -119,8 +131,12 @@ class UnifiedCoreService {
 
   String _helpText() => '''
 === PROJECT ZION - KALI EDITION ===
+Kali Bootstrap:
+  kali_bootstrap   - Auto-install & start Kali
+  kali_shutdown    - Shutdown Kali
+  kali_status      - Show Kali status
+
 Kali Commands:
-  kali_check       - Check if Kali is available
   kali_nmap <ip>   - Run Nmap
   kali_sqlmap <url>- Run Sqlmap
   kali_msf         - Run Metasploit
