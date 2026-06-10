@@ -34,7 +34,9 @@ import '../learning/learning_center.dart';
 import '../store/app_store.dart';
 import '../help/help_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
 import '../maintenance/maintenance_center.dart';
@@ -45,7 +47,9 @@ import '../learning/learning_center.dart';
 import '../store/app_store.dart';
 import '../help/help_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
 import '../maintenance/maintenance_center.dart';
@@ -56,7 +60,9 @@ import '../learning/learning_center.dart';
 import '../store/app_store.dart';
 import '../help/help_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../security_center/security_center.dart';
 import '../tasks/advanced_task_manager.dart';
 import '../downloads/download_manager.dart';
@@ -69,7 +75,9 @@ import '../learning/learning_center.dart';
 import '../store/app_store.dart';
 import '../help/help_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
 import '../maintenance/maintenance_center.dart';
@@ -80,7 +88,9 @@ import '../learning/learning_center.dart';
 import '../store/app_store.dart';
 import '../help/help_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
 import '../maintenance/maintenance_center.dart';
@@ -91,7 +101,9 @@ import '../learning/learning_center.dart';
 import '../store/app_store.dart';
 import '../help/help_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../media/media_center.dart';
+import '../productivity/productivity_center.dart';
 import '../notifications/advanced_notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
@@ -663,3 +675,6 @@ IconButton(
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.audiotrack, 'label': 'Media', 'widget': const MediaCenter(), 'color': Colors.pink},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.work, 'label': 'Productivity', 'widget': const ProductivityCenter(), 'color': Colors.orange},
