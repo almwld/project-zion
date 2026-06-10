@@ -27,6 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdk 34
+    ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -59,7 +60,7 @@ android {
         abi {
             enable true
             reset()
-            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            include 'armeabi-v7a', 'arm64-v8a'
             universalApk true
         }
     }
