@@ -20,6 +20,7 @@ import '../backup/backup_manager.dart';
 import '../exploits/exploit_database.dart';
 import '../payloads/payload_generator.dart';
 import '../qr/qr_scanner.dart';
+import '../notifications/notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
 class ResponsiveDesktop extends StatefulWidget {
@@ -529,3 +530,16 @@ class DesktopWindow {
     required this.isMaximized,
   }) : savedSize = size, savedPosition = position;
 }
+
+// إضافة في _buildSystemTray
+IconButton(
+  icon: const Icon(Icons.notifications, color: Colors.white),
+  onPressed: () {
+    _openWindow('Notification Center', const NotificationCenter(), size: const Size(400, 600));
+  },
+  padding: EdgeInsets.zero,
+  constraints: const BoxConstraints(),
+),
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.notifications, 'label': 'Notifications', 'widget': const NotificationCenter(), 'color': Colors.blue},
