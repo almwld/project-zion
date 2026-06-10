@@ -530,3 +530,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.android, 'label': 'Robotics', 'widget': const RoboticsCenter(), 'color': Colors.cyan},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.map, 'label': 'Geospatial', 'widget': const GeospatialCenter(), 'color': Colors.green},
