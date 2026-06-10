@@ -199,6 +199,7 @@ class ZionOS extends StatelessWidget {
         AppRoutes.appStore: (context) => const AppStore(),
         AppRoutes.simulationCenter: (context) => const SimulationCenter(),
         AppRoutes.automationCenter: (context) => const AutomationCenter(),
+        '/nixos': (context) => const NixOSIntegration(),
       },
     );
   }

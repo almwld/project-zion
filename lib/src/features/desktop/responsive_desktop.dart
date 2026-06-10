@@ -773,3 +773,6 @@ class DesktopWindow {
     required this.isMaximized,
   }) : savedSize = size, savedPosition = position;
 }
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.snowflake, 'label': 'NixOS', 'route': '/nixos', 'color': Colors.indigo},
