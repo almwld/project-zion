@@ -518,3 +518,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.dashboard, 'label': 'Containers', 'widget': const ContainerManager(), 'color': Colors.indigo},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.analytics, 'label': 'Predictive', 'widget': const PredictiveAnalyticsCenter(), 'color': Colors.deepPurple},
