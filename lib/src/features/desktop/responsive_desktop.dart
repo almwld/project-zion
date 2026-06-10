@@ -24,7 +24,7 @@ import '../power/power_management.dart';
 import '../cleaner/system_cleaner.dart';
 import '../security_center/security_center.dart';
 import '../security_center/security_center.dart';
-import '../notifications/notification_center.dart';
+import '../notifications/advanced_notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
 class ResponsiveDesktop extends StatefulWidget {
@@ -539,14 +539,14 @@ class DesktopWindow {
 IconButton(
   icon: const Icon(Icons.notifications, color: Colors.white),
   onPressed: () {
-    _openWindow('Notification Center', const NotificationCenter(), size: const Size(400, 600));
+    _openWindow('Notification Center', const AdvancedNotificationCenter(), size: const Size(400, 600));
   },
   padding: EdgeInsets.zero,
   constraints: const BoxConstraints(),
 ),
 
 // إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.notifications, 'label': 'Notifications', 'widget': const NotificationCenter(), 'color': Colors.blue},
+{'icon': Icons.notifications, 'label': 'Notifications', 'widget': const AdvancedNotificationCenter(), 'color': Colors.blue},
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.battery_std, 'label': 'Power', 'widget': const PowerManagement(), 'color': Colors.green},
