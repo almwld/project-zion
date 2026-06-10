@@ -1,28 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
-class InfoCenter extends StatefulWidget {
+class InfoCenter extends StatelessWidget {
   const InfoCenter({super.key});
-
-  @override
-  State<InfoCenter> createState() => _InfoCenterState();
-}
-
-class _InfoCenterState extends State<InfoCenter> {
-  String _appVersion = '3.3.0';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadVersion();
-  }
-
-  Future<void> _loadVersion() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      _appVersion = packageInfo.version;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +19,9 @@ class _InfoCenterState extends State<InfoCenter> {
             const SizedBox(height: 20),
             const Text('Zion OS', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
-            Text('Version $_appVersion', style: const TextStyle(color: Colors.white70)),
+            const Text('Version 3.3.0', style: TextStyle(color: Colors.white70)),
+            const SizedBox(height: 20),
+            const Text('© 2024 Zion OS', style: TextStyle(color: Colors.grey)),
           ],
         ),
       ),

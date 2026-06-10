@@ -665,7 +665,5 @@ class DesktopWindow {
 }
 
 // إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.docker, 'label': 'Docker', 'route': '/container_advanced', 'color': Colors.cyan},
 
 // إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.docker, 'label': 'Docker', 'route': '/container_advanced', 'color': Colors.cyan},

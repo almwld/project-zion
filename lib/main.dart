@@ -35,7 +35,6 @@ import 'src/features/reports/report_generator.dart';
 import 'src/features/analytics/analytics_center.dart';
 import 'src/features/business/business_analytics.dart';
 import 'src/features/predictive_analytics/predictive_analytics_center.dart';
-import 'src/features/api_integration/api_integration_center.dart';
 import 'src/features/cloud/cloud_center.dart';
 import 'src/features/blockchain/blockchain_center.dart';
 import 'src/features/integration/integration_center.dart';
@@ -153,7 +152,6 @@ class ZionOS extends StatelessWidget {
         AppRoutes.predictiveAnalytics: (context) => const PredictiveAnalyticsCenter(),
         
         // التكامل والخدمات
-        AppRoutes.apiIntegration: (context) => const ApiIntegrationCenter(),
         AppRoutes.cloudCenter: (context) => const CloudCenter(),
         AppRoutes.blockchainCenter: (context) => const BlockchainCenter(),
         AppRoutes.integrationCenter: (context) => const IntegrationCenter(),
