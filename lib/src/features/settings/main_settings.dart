@@ -351,4 +351,3 @@ class _MainSettingsState extends State<MainSettings> {
 case 'Display':
   return const DisplaySettings();
 case 'Security':
-  return const SecuritySettingsAdvanced();

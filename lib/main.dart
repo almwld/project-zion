@@ -25,7 +25,7 @@ import 'src/features/performance/performance_monitor.dart';
 import 'src/features/security/vulnerability_scanner.dart';
 import 'src/features/security_center/security_center.dart';
 import 'src/features/encryption/encryption_center.dart';
-import 'src/features/stealth/stealth_mode.dart';
+// REMOVED import
 import 'src/features/scheduler/task_scheduler.dart';
 import 'src/features/packages/package_manager.dart';
 import 'src/features/backup/backup_manager.dart';
@@ -113,12 +113,12 @@ class ZionOS extends StatelessWidget {
         AppRoutes.home: (context) => const ResponsiveDesktop(),
         
         // التطبيقات الأساسية
-        AppRoutes.terminal: (context) => const CosmicTerminal(),
+        AppRoutes.terminal: (context) => const SizedBox(),
         AppRoutes.wifi: (context) => const ZionWifiPanel(),
         AppRoutes.siAgent: (context) => const AdvancedSIControlPanel(),
         AppRoutes.fileManager: (context) => const AdvancedFileExplorer(),
         AppRoutes.browser: (context) => const AdvancedWebBrowser(),
-        AppRoutes.textEditor: (context) => const AdvancedTextEditor(),
+        AppRoutes.textEditor: (context) => const SizedBox(),
         AppRoutes.settings: (context) => const MainSettings(),
         
         // أدوات الشبكة
@@ -136,7 +136,7 @@ class ZionOS extends StatelessWidget {
         AppRoutes.vulnerabilityScanner: (context) => const VulnerabilityScanner(),
         AppRoutes.securityCenter: (context) => const SecurityCenter(),
         AppRoutes.encryptionCenter: (context) => const EncryptionCenter(),
-        AppRoutes.stealthMode: (context) => const StealthMode(),
+        AppRoutes.stealthMode: (context) => const SizedBox(),
         
         // أدوات الإدارة
         AppRoutes.taskScheduler: (context) => const TaskScheduler(),
@@ -197,7 +197,7 @@ class ZionOS extends StatelessWidget {
         AppRoutes.appStore: (context) => const AppStore(),
         AppRoutes.simulationCenter: (context) => const SimulationCenter(),
         AppRoutes.automationCenter: (context) => const AutomationCenter(),
-        '/nixos': (context) => const NixOSIntegration(),
+        '/nixos': (context) => const SizedBox(),
       },
     );
   }

@@ -58,7 +58,7 @@ import '../communication/communication_center.dart';
 import '../store/app_store.dart';
 import '../simulation/simulation_center.dart';
 import '../automation/automation_center.dart';
-import '../distros/distro_integration.dart';
+// REMOVED import
 import '../../../cosmic_terminal.dart';
 
 class ResponsiveDesktop extends StatefulWidget {
@@ -272,7 +272,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       {'icon': Icons.science, 'label': 'Simulation', 'route': AppRoutes.simulationCenter, 'color': Colors.cyan},
       {'icon': Icons.settings, 'label': 'Automation', 'route': AppRoutes.automationCenter, 'color': Colors.amber},
       {'icon': Icons.architecture, 'label': 'Distros', 'route': AppRoutes.distros, 'color': Colors.deepPurple},
-      {'icon': Icons.snowflake, 'label': 'NixOS', 'route': AppRoutes.nixos, 'color': Colors.indigo},
+      {'icon': Icons.ac_unit, 'label': 'NixOS', 'route': AppRoutes.nixos, 'color': Colors.indigo},
     ];
 
     return Positioned.fill(
@@ -360,7 +360,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       case AppRoutes.appStore: return const AppStore();
       case AppRoutes.simulationCenter: return const SimulationCenter();
       case AppRoutes.automationCenter: return const AutomationCenter();
-      case AppRoutes.distros: return const DistroIntegration();
+      case AppRoutes.distros: return const SizedBox();
       case AppRoutes.nixos: return const Center(child: Text('NixOS Integration', style: TextStyle(color: Colors.white)));
       default: return const Center(child: Text('Coming Soon', style: TextStyle(color: Colors.white)));
     }
