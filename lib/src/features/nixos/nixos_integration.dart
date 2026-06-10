@@ -469,3 +469,251 @@ class NixModule {
 
   NixModule(this.name, this.description, this.enabled, this.icon, this.color);
 }
+
+// ==================== خدمات NixOS ====================
+class NixService {
+  final String name;
+  final String description;
+  bool enabled;
+  final String status;
+  final IconData icon;
+  final Color color;
+
+  NixService(this.name, this.description, this.enabled, this.status, this.icon, this.color);
+}
+
+// إضافة في _loadServices
+void _loadServices() {
+  _services = [
+    NixService('nginx', 'Web server', true, 'Running', Icons.public, Colors.blue),
+    NixService('postgresql', 'Database', true, 'Running', Icons.storage, Colors.cyan),
+    NixService('redis', 'Cache', false, 'Stopped', Icons.speed, Colors.red),
+    NixService('docker', 'Container runtime', true, 'Running', Icons.docker, Colors.blue),
+  ];
+}
+
+// إضافة في build
+Widget _buildServicesTab() {
+  return ListView.builder(
+    itemCount: _services.length,
+    itemBuilder: (ctx, i) {
+      final service = _services[i];
+      return Card(
+        color: Colors.grey.shade900,
+        margin: const EdgeInsets.all(16),
+        child: ListTile(
+          leading: Icon(service.icon, color: service.color),
+          title: Text(service.name, style: const TextStyle(color: Colors.white)),
+          subtitle: Text(service.description, style: const TextStyle(color: Colors.grey)),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: service.status == 'Running' ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(service.status, style: TextStyle(color: service.status == 'Running' ? Colors.green : Colors.red)),
+              ),
+              const SizedBox(width: 8),
+              Switch(
+                value: service.enabled,
+                onChanged: (_) {},
+                activeColor: service.color,
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+// إضافة الـ tab
+Tab(icon: Icon(Icons.miscellaneous_services), text: 'Services'),
+// وإضافة في IndexedStack
+_buildServicesTab(),
+
+// ==================== Nix Overlays ====================
+class NixOverlay {
+  final String name;
+  final String description;
+  bool enabled;
+  final String priority;
+  final IconData icon;
+  final Color color;
+
+  NixOverlay(this.name, this.description, this.enabled, this.priority, this.icon, this.color);
+}
+
+void _loadOverlays() {
+  _overlays = [
+    NixOverlay('nixpkgs-unstable', 'Latest unstable packages', true, 'High', Icons.update, Colors.orange),
+    NixOverlay('nixos-hardware', 'Hardware optimizations', true, 'Medium', Icons.computer, Colors.blue),
+    NixOverlay('nix-community', 'Community packages', false, 'Low', Icons.people, Colors.green),
+  ];
+}
+
+Widget _buildOverlaysTab() {
+  return ListView.builder(
+    itemCount: _overlays.length,
+    itemBuilder: (ctx, i) {
+      final overlay = _overlays[i];
+      return Card(
+        color: Colors.grey.shade900,
+        margin: const EdgeInsets.all(16),
+        child: ListTile(
+          leading: Icon(overlay.icon, color: overlay.color),
+          title: Text(overlay.name, style: const TextStyle(color: Colors.white)),
+          subtitle: Text('${overlay.description} • Priority: ${overlay.priority}', style: const TextStyle(color: Colors.grey)),
+          trailing: Switch(
+            value: overlay.enabled,
+            onChanged: (_) {},
+            activeColor: overlay.color,
+          ),
+        ),
+      );
+    },
+  );
+}
+
+// إضافة الـ tab
+Tab(icon: Icon(Icons.layer), text: 'Overlays'),
+_buildOverlaysTab(),
+
+// ==================== Garbage Collection ====================
+int _storeSize = 0;
+int _garbageSize = 0;
+int _optimizationScore = 0;
+
+void _loadStoreStats() {
+  _storeSize = 2450;
+  _garbageSize = 320;
+  _optimizationScore = 87;
+}
+
+void _runGarbageCollection() {
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('Garbage Collection'),
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Running: nix-collect-garbage -d', style: TextStyle(color: Colors.white)),
+          SizedBox(height: 16),
+          LinearProgressIndicator(),
+        ],
+      ),
+      backgroundColor: Colors.grey.shade900,
+    ),
+  );
+  Future.delayed(const Duration(seconds: 3), () {
+    Navigator.pop(context);
+    setState(() {
+      _garbageSize = 0;
+      _storeSize -= 320;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Garbage collection completed! Freed 320 MB')),
+    );
+  });
+}
+
+void _optimizeStore() {
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('Optimizing Store'),
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Running: nix-store --optimise', style: TextStyle(color: Colors.white)),
+          SizedBox(height: 16),
+          LinearProgressIndicator(),
+        ],
+      ),
+      backgroundColor: Colors.grey.shade900,
+    ),
+  );
+  Future.delayed(const Duration(seconds: 4), () {
+    Navigator.pop(context);
+    setState(() {
+      _optimizationScore = 94;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Store optimized! Deduplication completed.')),
+    );
+  });
+}
+
+Widget _buildStoreTab() {
+  return SingleChildScrollView(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.cyan.shade900, Colors.teal.shade900],
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              const Text('Nix Store', style: TextStyle(color: Colors.white, fontSize: 18)),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildStoreStat('Store Size', '${_storeSize} MB', Colors.cyan),
+                  _buildStoreStat('Garbage', '${_garbageSize} MB', Colors.red),
+                  _buildStoreStat('Optimization', '${_optimizationScore}%', Colors.green),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _runGarbageCollection,
+                      icon: const Icon(Icons.delete),
+                      label: const Text('GC'),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _optimizeStore,
+                      icon: const Icon(Icons.speed),
+                      label: const Text('Optimize'),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildStoreStat(String label, String value, Color color) {
+  return Column(
+    children: [
+      Text(value, style: TextStyle(color: color, fontSize: 20, fontWeight: FontWeight.bold)),
+      Text(label, style: const TextStyle(color: Colors.white70)),
+    ],
+  );
+}
+
+// إضافة الـ tab
+Tab(icon: Icon(Icons.storage), text: 'Store'),
+_buildStoreTab(),
