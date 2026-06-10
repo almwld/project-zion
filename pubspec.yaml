@@ -6,6 +6,8 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
+  just_audio: ^0.9.36
+  audio_service: ^0.18.12
   battery_plus: ^5.0.0
   power_settings: ^2.0.0
   flutter:
@@ -28,6 +30,8 @@ dependencies:
   flutter_local_notifications: ^16.3.0
 
 dev_dependencies:
+  just_audio: ^0.9.36
+  audio_service: ^0.18.12
   battery_plus: ^5.0.0
   power_settings: ^2.0.0
   flutter_test:
