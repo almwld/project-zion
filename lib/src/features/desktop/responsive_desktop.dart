@@ -509,3 +509,6 @@ class DesktopWindow {
     required this.isMaximized,
   }) : savedSize = size, savedPosition = position;
 }
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.book, 'label': 'Docs', 'widget': const DocsCenter(), 'color': Colors.orange},
