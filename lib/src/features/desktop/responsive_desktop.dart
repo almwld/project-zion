@@ -25,13 +25,19 @@ import '../cleaner/system_cleaner.dart';
 import '../security_center/security_center.dart';
 import '../tasks/advanced_task_manager.dart';
 import '../downloads/download_manager.dart';
+import '../network_control/network_control_center.dart';
 import '../downloads/download_manager.dart';
+import '../network_control/network_control_center.dart';
 import '../downloads/download_manager.dart';
+import '../network_control/network_control_center.dart';
 import '../security_center/security_center.dart';
 import '../tasks/advanced_task_manager.dart';
 import '../downloads/download_manager.dart';
+import '../network_control/network_control_center.dart';
 import '../downloads/download_manager.dart';
+import '../network_control/network_control_center.dart';
 import '../downloads/download_manager.dart';
+import '../network_control/network_control_center.dart';
 import '../notifications/advanced_notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
@@ -573,3 +579,6 @@ IconButton(
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.download, 'label': 'Downloads', 'widget': const DownloadManager(), 'color': Colors.orange},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.router, 'label': 'Network Ctrl', 'widget': const NetworkControlCenter(), 'color': Colors.cyan},
