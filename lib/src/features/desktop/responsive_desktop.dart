@@ -527,3 +527,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.currency_bitcoin, 'label': 'Blockchain', 'widget': const BlockchainCenter(), 'color': Colors.amber},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.android, 'label': 'Robotics', 'widget': const RoboticsCenter(), 'color': Colors.cyan},
