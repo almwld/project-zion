@@ -24,6 +24,12 @@ jobs:
           channel: 'stable'
           cache: true
       
+      - name: Create local.properties
+        run: |
+          echo "flutter.sdk=${{ env.FLUTTER_HOME }}" > android/local.properties
+          echo "flutter.buildMode=release" >> android/local.properties
+          cat android/local.properties
+      
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
         with:
