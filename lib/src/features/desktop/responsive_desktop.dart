@@ -545,3 +545,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.bar_chart, 'label': 'Business', 'widget': const BusinessAnalytics(), 'color': Colors.indigo},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.architecture, 'label': 'Distros', 'route': '/distros', 'color': Colors.deepPurple},
