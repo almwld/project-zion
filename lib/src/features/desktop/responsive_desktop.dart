@@ -524,3 +524,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.verified, 'label': 'Quality', 'widget': const QualityAssuranceCenter(), 'color': Colors.teal},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.currency_bitcoin, 'label': 'Blockchain', 'widget': const BlockchainCenter(), 'color': Colors.amber},
