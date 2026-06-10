@@ -30,18 +30,21 @@ import '../maintenance/maintenance_center.dart';
 import '../backup_restore/backup_restore_center.dart';
 import '../monitoring/monitoring_center.dart';
 import '../games/games_center.dart';
+import '../learning/learning_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
 import '../maintenance/maintenance_center.dart';
 import '../backup_restore/backup_restore_center.dart';
 import '../monitoring/monitoring_center.dart';
 import '../games/games_center.dart';
+import '../learning/learning_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
 import '../maintenance/maintenance_center.dart';
 import '../backup_restore/backup_restore_center.dart';
 import '../monitoring/monitoring_center.dart';
 import '../games/games_center.dart';
+import '../learning/learning_center.dart';
 import '../security_center/security_center.dart';
 import '../tasks/advanced_task_manager.dart';
 import '../downloads/download_manager.dart';
@@ -50,18 +53,21 @@ import '../maintenance/maintenance_center.dart';
 import '../backup_restore/backup_restore_center.dart';
 import '../monitoring/monitoring_center.dart';
 import '../games/games_center.dart';
+import '../learning/learning_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
 import '../maintenance/maintenance_center.dart';
 import '../backup_restore/backup_restore_center.dart';
 import '../monitoring/monitoring_center.dart';
 import '../games/games_center.dart';
+import '../learning/learning_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
 import '../maintenance/maintenance_center.dart';
 import '../backup_restore/backup_restore_center.dart';
 import '../monitoring/monitoring_center.dart';
 import '../games/games_center.dart';
+import '../learning/learning_center.dart';
 import '../notifications/advanced_notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
@@ -618,3 +624,6 @@ IconButton(
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.games, 'label': 'Games', 'widget': const GamesCenter(), 'color': Colors.amber},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.school, 'label': 'Learning', 'widget': const LearningCenter(), 'color': Colors.teal},
