@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'src/features/splash/splash_screen.dart';
 import 'src/features/onboarding/onboarding_screen.dart';
 import 'src/features/lock/lock_screen.dart';
-import 'src/features/desktop/glass_desktop_optimized.dart';
+import 'src/features/desktop/responsive_desktop.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ class ZionOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zion OS v3.2',
+      title: 'Zion OS v3.3',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Colors.black,
@@ -39,7 +39,7 @@ class ZionOS extends StatelessWidget {
         '/splash': (context) => const SplashScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
         '/lock': (context) => const LockScreen(),
-        '/home': (context) => const GlassDesktopOptimized(),
+        '/home': (context) => const ResponsiveDesktop(),
       },
     );
   }
