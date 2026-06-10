@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'src/features/splash/splash_screen.dart';
+import 'src/features/onboarding/onboarding_screen.dart';
+import 'src/features/lock/lock_screen.dart';
+import 'src/features/desktop/glass_desktop_optimized.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,8 +44,3 @@ class ZionOS extends StatelessWidget {
     );
   }
 }
-
-// استيراد الشاشات المطلوبة
-import 'src/features/onboarding/onboarding_screen.dart';
-import 'src/features/lock/lock_screen.dart';
-import 'src/features/desktop/glass_desktop_optimized.dart';
