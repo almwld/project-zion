@@ -10,10 +10,6 @@ class AdvancedSettings extends StatefulWidget {
 
 class _AdvancedSettingsState extends State<AdvancedSettings> {
   bool _darkMode = true;
-  bool _animations = true;
-  double _animationSpeed = 1.0;
-  String _accentColor = 'green';
-  int _fontSize = 14;
 
   @override
   void initState() {
@@ -25,19 +21,12 @@ class _AdvancedSettingsState extends State<AdvancedSettings> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _darkMode = prefs.getBool('dark_mode') ?? true;
-      _animations = prefs.getBool('animations') ?? true;
-      _animationSpeed = prefs.getDouble('animation_speed') ?? 1.0;
-      _accentColor = prefs.getString('accent_color') ?? 'green';
-      _fontSize = prefs.getInt('font_size') ?? 14;
     });
   }
 
-  Future<void> _saveSetting(String key, dynamic value) async {
+  Future<void> _saveSetting(String key, bool value) async {
     final prefs = await SharedPreferences.getInstance();
-    if (value is bool) await prefs.setBool(key, value);
-    else if (value is double) await prefs.setDouble(key, value);
-    else if (value is int) await prefs.setInt(key, value);
-    else if (value is String) await prefs.setString(key, value);
+    await prefs.setBool(key, value);
     setState(() {});
   }
 
@@ -55,37 +44,6 @@ class _AdvancedSettingsState extends State<AdvancedSettings> {
             title: const Text('Dark Mode'),
             value: _darkMode,
             onChanged: (v) => _saveSetting('dark_mode', v),
-          ),
-          SwitchListTile(
-            title: const Text('Animations'),
-            value: _animations,
-            onChanged: (v) => _saveSetting('animations', v),
-          ),
-          ListTile(
-            title: const Text('Animation Speed'),
-            subtitle: Slider(
-              value: _animationSpeed,
-              min: 0.5,
-              max: 2.0,
-              onChanged: (v) => _saveSetting('animation_speed', v),
-            ),
-            trailing: Text('${_animationSpeed.toStringAsFixed(1)}x'),
-          ),
-          ListTile(
-            title: const Text('Accent Color'),
-            trailing: DropdownButton<String>(
-              value: _accentColor,
-              items: ['green', 'blue', 'red', 'purple'].map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
-              onChanged: (v) => _saveSetting('accent_color', v),
-            ),
-          ),
-          ListTile(
-            title: const Text('Font Size'),
-            trailing: DropdownButton<int>(
-              value: _fontSize,
-              items: [12, 14, 16, 18].map((s) => DropdownMenuItem(value: s, child: Text('$s'))).toList(),
-              onChanged: (v) => _saveSetting('font_size', v),
-            ),
           ),
         ],
       ),
