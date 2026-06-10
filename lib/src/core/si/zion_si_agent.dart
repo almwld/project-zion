@@ -5,7 +5,6 @@ import '../../core/arsenal/zion_net.dart';
 import '../../core/arsenal/zion_crack.dart';
 import '../../core/arsenal/zion_exploit.dart';
 import '../../core/arsenal/zion_web.dart';
-import '../../core/arsenal/zion_wifi_advanced.dart';
 
 class ZionSIAgent {
   static final ZionSIAgent _instance = ZionSIAgent._internal();
@@ -94,9 +93,6 @@ class ZionSIAgent {
         return sqli;
       case 'exploit_eternalblue':
         return await ZionExploit.runExploit(target, 'eternalblue');
-      case 'wifi_crack':
-        final result = await ZionWiFiAdvanced().fullAttack(target);
-        return result.success;
       default:
         return false;
     }
