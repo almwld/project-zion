@@ -536,3 +536,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.map, 'label': 'Geospatial', 'widget': const GeospatialCenter(), 'color': Colors.green},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.energy_savings_leaf, 'label': 'Energy', 'widget': const EnergyCenter(), 'color': Colors.green},
