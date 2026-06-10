@@ -346,3 +346,9 @@ class _MainSettingsState extends State<MainSettings> {
     }
   }
 }
+
+// إضافة أقسام جديدة في _buildContent
+case 'Display':
+  return const DisplaySettings();
+case 'Security':
+  return const SecuritySettingsAdvanced();
