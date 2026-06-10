@@ -53,7 +53,7 @@ class _LearningCenterState extends State<LearningCenter> {
               value: _userXP / _nextLevelXP,
               backgroundColor: Colors.grey.shade800,
               color: Colors.teal,
-              width: 200,
+              
             ),
           ],
         ),

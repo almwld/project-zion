@@ -145,15 +145,15 @@ class _BackupRestoreCenterState extends State<BackupRestoreCenter> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const ListTile(
-              leading: Icon(Icons.daily, color: Colors.blue),
+              leading: Icon(Icons.today, color: Colors.blue),
               title: Text('Daily', style: TextStyle(color: Colors.white)),
             ),
             const ListTile(
-              leading: Icon(Icons.weekly, color: Colors.green),
+              leading: Icon(Icons.weekend, color: Colors.green),
               title: Text('Weekly', style: TextStyle(color: Colors.white)),
             ),
             const ListTile(
-              leading: Icon(Icons.monthly, color: Colors.orange),
+              leading: Icon(Icons.calendar_month, color: Colors.orange),
               title: Text('Monthly', style: TextStyle(color: Colors.white)),
             ),
           ],
