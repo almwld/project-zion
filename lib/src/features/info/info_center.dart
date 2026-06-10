@@ -38,11 +38,9 @@ class _InfoCenterState extends State<InfoCenter> {
           children: [
             const Icon(Icons.info, color: Colors.blue, size: 64),
             const SizedBox(height: 20),
-            Text('Zion OS', style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+            const Text('Zion OS', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Text('Version $_appVersion', style: const TextStyle(color: Colors.white70)),
-            const SizedBox(height: 20),
-            const Text('© 2024 Zion OS', style: TextStyle(color: Colors.grey)),
           ],
         ),
       ),
