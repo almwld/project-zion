@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/responsive_helper.dart';
 import '../settings/main_settings.dart';
 import '../wifi/zion_wifi_panel.dart';
-import '../si/si_control_panel.dart';
+import '../si/advanced_si_control_panel.dart';
 import '../windows/advanced_file_explorer.dart';
 import '../windows/advanced_web_browser.dart';
 import '../windows/zion_text_editor.dart';
@@ -197,7 +197,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
     final icons = [
       {'icon': Icons.terminal, 'label': 'Terminal', 'widget': const CosmicTerminal(), 'color': Colors.green},
       {'icon': Icons.wifi, 'label': 'WiFi', 'widget': const ZionWifiPanel(), 'color': Colors.blue},
-      {'icon': Icons.psychology, 'label': 'SI Agent', 'widget': const SIControlPanel(), 'color': Colors.purple},
+      {'icon': Icons.psychology, 'label': 'SI Agent', 'widget': const AdvancedSIControlPanel(), 'color': Colors.purple},
       {'icon': Icons.folder, 'label': 'Files', 'widget': const AdvancedFileExplorer(), 'color': Colors.orange},
       {'icon': Icons.public, 'label': 'Browser', 'widget': const AdvancedWebBrowser(), 'color': Colors.teal},
       {'icon': Icons.edit, 'label': 'Editor', 'widget': const ZionTextEditor(), 'color': Colors.pink},
@@ -319,7 +319,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
     final List<Map<String, dynamic>> menuItems = [
       {'icon': Icons.terminal, 'title': 'Terminal', 'widget': const CosmicTerminal(), 'color': Colors.green},
       {'icon': Icons.wifi, 'title': 'WiFi', 'widget': const ZionWifiPanel(), 'color': Colors.blue},
-      {'icon': Icons.psychology, 'title': 'SI Agent', 'widget': const SIControlPanel(), 'color': Colors.purple},
+      {'icon': Icons.psychology, 'title': 'SI Agent', 'widget': const AdvancedSIControlPanel(), 'color': Colors.purple},
       {'icon': Icons.folder, 'title': 'File Manager', 'widget': const AdvancedFileExplorer(), 'color': Colors.orange},
       {'icon': Icons.public, 'title': 'Browser', 'widget': const AdvancedWebBrowser(), 'color': Colors.teal},
       {'icon': Icons.edit, 'title': 'Editor', 'widget': const ZionTextEditor(), 'color': Colors.pink},
