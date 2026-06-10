@@ -22,6 +22,8 @@ import '../payloads/payload_generator.dart';
 import '../qr/qr_scanner.dart';
 import '../power/power_management.dart';
 import '../cleaner/system_cleaner.dart';
+import '../security_center/security_center.dart';
+import '../security_center/security_center.dart';
 import '../notifications/notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
@@ -551,3 +553,9 @@ IconButton(
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.cleaning_services, 'label': 'Cleaner', 'widget': const SystemCleaner(), 'color': Colors.blue},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.security, 'label': 'Security', 'widget': const SecurityCenter(), 'color': Colors.red},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.security, 'label': 'Security', 'widget': const SecurityCenter(), 'color': Colors.red},
