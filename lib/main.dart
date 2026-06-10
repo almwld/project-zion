@@ -1,49 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'src/features/splash/splash_screen.dart';
-import 'src/features/onboarding/onboarding_screen.dart';
-import 'src/features/lock/lock_screen.dart';
-import 'src/features/desktop/responsive_desktop.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
-  
-  final prefs = await SharedPreferences.getInstance();
-  final isFirstLaunch = prefs.getBool('first_launch') ?? true;
-  
-  if (isFirstLaunch) {
-    await prefs.setBool('first_launch', false);
-  }
-  
-  runApp(ZionOS(isFirstLaunch: isFirstLaunch));
+void main() {
+  runApp(const ZionOS());
 }
 
 class ZionOS extends StatelessWidget {
-  final bool isFirstLaunch;
-  const ZionOS({super.key, required this.isFirstLaunch});
+  const ZionOS({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zion OS v3.3',
+      title: 'Zion OS',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Colors.black,
         primaryColor: Colors.green,
       ),
-      initialRoute: isFirstLaunch ? '/onboarding' : '/lock',
-      routes: {
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/lock': (context) => const LockScreen(),
-        '/home': (context) => const ResponsiveDesktop(),
-      },
+      home: const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.security, color: Colors.green, size: 80),
+              SizedBox(height: 20),
+              Text(
+                'ZION OS v3.3',
+                style: TextStyle(color: Colors.green, fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Loading...',
+                style: TextStyle(color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
