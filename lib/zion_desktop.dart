@@ -1,163 +1,267 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'core/wm/window_manager.dart';
-import 'zion_taskbar.dart';
-import 'zion_desktop_icons.dart';
-import 'zion_desktop_clock.dart';
-import 'zion_system_monitor.dart';
-import 'zion_notifications.dart';
-import 'dart:math';
+import 'dart:ui' as ui;
+import 'cosmic_terminal.dart';
+import 'src/features/dashboard/si_control_panel.dart';
+import 'src/features/wifi/zion_wifi_panel.dart';
 
-class ZionDesktop extends StatelessWidget {
+class ZionDesktop extends StatefulWidget {
   const ZionDesktop({super.key});
+
+  @override
+  State<ZionDesktop> createState() => _ZionDesktopState();
+}
+
+class _ZionDesktopState extends State<ZionDesktop> {
+  final List<DesktopWindow> _windows = [];
+  int _nextWindowId = 1;
+  DateTime _currentTime = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _updateTime();
+  }
+
+  void _updateTime() {
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() => _currentTime = DateTime.now());
+        _updateTime();
+      }
+    });
+  }
+
+  void _openWindow(String title, Widget content, {Size size = const Size(800, 600)}) {
+    setState(() {
+      _windows.add(DesktopWindow(
+        id: _nextWindowId++,
+        title: title,
+        content: content,
+        position: Offset(50 + _windows.length * 30, 50 + _windows.length * 30),
+        size: size,
+      ));
+    });
+  }
+
+  void _closeWindow(int id) {
+    setState(() => _windows.removeWhere((w) => w.id == id));
+  }
+
+  void _bringToFront(int id) {
+    final index = _windows.indexWhere((w) => w.id == id);
+    if (index != -1 && index != _windows.length - 1) {
+      setState(() {
+        final window = _windows.removeAt(index);
+        _windows.add(window);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      backgroundColor: Colors.black,
+      body: Stack(
         children: [
-          Expanded(
-            child: Stack(
-              children: [
-                const ZionWallpaper(),
-                // الساعة في أعلى اليمين
-                Positioned(
-                  top: 20,
-                  right: 20,
-                  child: const ZionDesktopClock(),
-                ),
-                // مراقب النظام في أسفل اليمين
-                Positioned(
-                  bottom: 20,
-                  right: 20,
-                  child: Container(
-                    width: 250,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0A0E0A).withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: const Color(0xFF00FF41).withOpacity(0.3)),
-                    ),
-                    child: const ZionSystemMonitor(),
-                  ),
-                ),
-                // أيقونات سطح المكتب
-                Positioned(top: 20, left: 20, child: DesktopIconWidget(icon: Icons.terminal, label: 'الطرفية', kaliCommand: '')),
-                Positioned(top: 20, left: 100, child: DesktopIconWidget(icon: Icons.travel_explore, label: 'Nmap', kaliCommand: 'nmap --help')),
-                Positioned(top: 100, left: 20, child: DesktopIconWidget(icon: Icons.bug_report, label: 'Metasploit', kaliCommand: 'msfconsole -q -x "version; exit"')),
-                Positioned(top: 100, left: 100, child: DesktopIconWidget(icon: Icons.storage, label: 'SQLmap', kaliCommand: 'sqlmap --help')),
-                Positioned(top: 180, left: 20, child: DesktopIconWidget(icon: Icons.lock, label: 'Hydra', kaliCommand: 'hydra -h')),
-                Positioned(top: 180, left: 100, child: DesktopIconWidget(icon: Icons.wifi, label: 'Aircrack', kaliCommand: 'aircrack-ng --help')),
-                // النوافذ
-                Consumer<WindowManager>(
-                  builder: (context, wm, child) {
-                    return Stack(
-                      children: wm.windows.map((window) {
-                        return Positioned(
-                          left: window.isMaximized ? 0 : window.x,
-                          top: window.isMaximized ? 0 : window.y,
-                          width: window.isMaximized ? MediaQuery.of(context).size.width : window.width,
-                          height: window.isMaximized ? MediaQuery.of(context).size.height - 36 : window.height,
-                          child: _ZionWindowFrame(window: window),
-                        );
-                      }).toList(),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-          const ZionTaskbar(),
+          _buildMatrixRain(),
+          _buildDesktopIcons(),
+          ..._windows.map((w) => _buildWindow(w)),
+          _buildTaskbar(),
         ],
       ),
     );
   }
-}
 
-class _ZionWindowFrame extends StatelessWidget {
-  final ZionWindow window;
-  const _ZionWindowFrame({required this.window});
-
-  @override
-  Widget build(BuildContext context) {
-    final wm = context.read<WindowManager>();
-    return GestureDetector(
-      onTap: () => wm.setActive(window.id),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF0A0E0A),
-          border: Border.all(color: wm.activeWindowId == window.id ? const Color(0xFF00FF41) : const Color(0xFF1A3A1A), width: 2),
-          borderRadius: BorderRadius.circular(8),
+  Widget _buildMatrixRain() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.green.shade900.withOpacity(0.3), Colors.black],
         ),
+      ),
+      child: const Center(
+        child: Text(
+          'ZION OS\nv2.0',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.green, fontSize: 48, fontWeight: FontWeight.bold, letterSpacing: 4),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopIcons() {
+    final icons = [
+      {'icon': Icons.terminal, 'label': 'Terminal', 'color': Colors.green, 'widget': const CosmicTerminal()},
+      {'icon': Icons.wifi, 'label': 'WiFi', 'color': Colors.blue, 'widget': const ZionWifiPanel()},
+      {'icon': Icons.psychology, 'label': 'SI Agent', 'color': Colors.purple, 'widget': const SIControlPanel()},
+      {'icon': Icons.security, 'label': 'Security', 'color': Colors.red, 'widget': const Center(child: Text('Security Panel', style: TextStyle(color: Colors.white)))},
+      {'icon': Icons.settings, 'label': 'Settings', 'color': Colors.grey, 'widget': const Center(child: Text('Settings', style: TextStyle(color: Colors.white)))},
+    ];
+
+    return Positioned.fill(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 30,
-              decoration: BoxDecoration(
-                color: wm.activeWindowId == window.id ? const Color(0xFF00FF41).withOpacity(0.2) : const Color(0xFF1A3A1A),
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
-              ),
-              child: Row(
-                children: [
-                  _WindowButton(color: Colors.red, onTap: () => wm.close(window.id)),
-                  const SizedBox(width: 4),
-                  _WindowButton(color: Colors.orange, onTap: () => wm.minimize(window.id)),
-                  const SizedBox(width: 4),
-                  _WindowButton(color: Colors.green, onTap: () => wm.maximize(window.id)),
-                  const SizedBox(width: 12),
-                  Expanded(child: Text(window.title, style: const TextStyle(color: Color(0xFF00FF41), fontSize: 12, fontFamily: 'monospace'))),
-                  GestureDetector(onPanUpdate: (details) => wm.updatePosition(window.id, details.delta.dx, details.delta.dy), child: const Padding(padding: EdgeInsets.all(8), child: Icon(Icons.drag_indicator, color: Color(0xFF00FF41), size: 14))),
-                ],
-              ),
+            const SizedBox(height: 40),
+            Wrap(
+              spacing: 30,
+              runSpacing: 30,
+              children: icons.map((icon) => GestureDetector(
+                onTap: () => _openWindow(icon['label'] as String, icon['widget'] as Widget),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 60, height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: icon['color'] as Color, width: 1),
+                      ),
+                      child: Icon(icon['icon'] as IconData, color: icon['color'] as Color, size: 32),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(icon['label'] as String, style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 11)),
+                  ],
+                ),
+              )).toList(),
             ),
-            Expanded(child: window.content),
-            GestureDetector(onPanUpdate: (details) => wm.updateSize(window.id, details.delta.dx, details.delta.dy), child: Container(height: 8, color: Colors.transparent, child: const Center(child: Icon(Icons.drag_indicator, color: Color(0xFF00FF41), size: 12)))),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildWindow(DesktopWindow w) {
+    return Positioned(
+      left: w.position.dx,
+      top: w.position.dy,
+      child: GestureDetector(
+        onTap: () => _bringToFront(w.id),
+        child: Container(
+          width: w.size.width,
+          height: w.size.height,
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.95),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.green, width: 1),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 10)],
+          ),
+          child: Column(
+            children: [
+              _buildTitleBar(w),
+              Expanded(child: w.content),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitleBar(DesktopWindow w) {
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.green.withOpacity(0.2),
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        border: Border(bottom: BorderSide(color: Colors.green.withOpacity(0.5))),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.circle, color: Colors.green, size: 12),
+          const SizedBox(width: 8),
+          Expanded(child: Text(w.title, style: const TextStyle(color: Colors.white, fontSize: 12))),
+          IconButton(icon: const Icon(Icons.close, size: 16, color: Colors.white), onPressed: () => _closeWindow(w.id)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTaskbar() {
+    return Positioned(
+      bottom: 0, left: 0, right: 0,
+      child: Container(
+        height: 48,
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.85),
+          border: Border(top: BorderSide(color: Colors.green.withOpacity(0.5))),
+        ),
+        child: Row(
+          children: [
+            _buildStartButton(),
+            const Spacer(),
+            _buildSystemTray(),
+            _buildClock(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStartButton() {
+    return GestureDetector(
+      onTap: () => _openWindow('Start Menu', Container(
+        width: 280,
+        color: Colors.black,
+        child: Column(
+          children: [
+            ListTile(title: const Text('Terminal', style: TextStyle(color: Colors.white)), onTap: () => _openWindow('Terminal', const CosmicTerminal())),
+            ListTile(title: const Text('WiFi Panel', style: TextStyle(color: Colors.white)), onTap: () => _openWindow('WiFi', const ZionWifiPanel())),
+            ListTile(title: const Text('SI Agent', style: TextStyle(color: Colors.white)), onTap: () => _openWindow('SI Agent', const SIControlPanel())),
+            const Divider(color: Colors.green),
+            ListTile(title: const Text('Exit', style: TextStyle(color: Colors.red)), onTap: () => Navigator.pop(context)),
+          ],
+        ),
+      ), size: const Size(280, 300)),
+      child: Container(
+        width: 60, height: 48,
+        decoration: BoxDecoration(gradient: LinearGradient(colors: [Colors.green, Colors.green.shade900])),
+        child: const Icon(Icons.menu, color: Colors.white, size: 28),
+      ),
+    );
+  }
+
+  Widget _buildSystemTray() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          Icon(Icons.battery_full, color: Colors.white, size: 18),
+          const SizedBox(width: 8),
+          Icon(Icons.wifi, color: Colors.white, size: 18),
+          const SizedBox(width: 8),
+          Icon(Icons.volume_up, color: Colors.white, size: 18),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClock() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(_formatTime(_currentTime), style: const TextStyle(color: Colors.white, fontSize: 12)),
+          Text(_formatDate(_currentTime), style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 9)),
+        ],
+      ),
+    );
+  }
+
+  String _formatTime(DateTime time) => '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  String _formatDate(DateTime time) => '${time.day}/${time.month}/${time.year}';
 }
 
-class _WindowButton extends StatelessWidget {
-  final Color color;
-  final VoidCallback onTap;
-  const _WindowButton({required this.color, required this.onTap});
-  @override
-  Widget build(BuildContext context) => GestureDetector(onTap: onTap, child: Container(width: 12, height: 12, margin: const EdgeInsets.only(left: 8), decoration: BoxDecoration(shape: BoxShape.circle, color: color)));
+class DesktopWindow {
+  final int id;
+  final String title;
+  final Widget content;
+  Offset position;
+  final Size size;
+  DesktopWindow({required this.id, required this.title, required this.content, required this.position, required this.size});
 }
-
-class ZionWallpaper extends StatefulWidget {
-  const ZionWallpaper({super.key});
-  @override
-  State<ZionWallpaper> createState() => _ZionWallpaperState();
-}
-
-class _ZionWallpaperState extends State<ZionWallpaper> with TickerProviderStateMixin {
-  late AnimationController _ctrl;
-  @override
-  void initState() { super.initState(); _ctrl = AnimationController(vsync: this, duration: const Duration(seconds: 10))..repeat(); }
-  @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(animation: _ctrl, builder: (context, child) => CustomPaint(painter: MatrixRainPainter(_ctrl.value), size: MediaQuery.of(context).size));
-}
-
-class MatrixRainPainter extends CustomPainter {
-  final double time;
-  final List<_RainColumn> _columns = [];
-  final Random _random = Random();
-  MatrixRainPainter(this.time) { if (_columns.isEmpty) for (int i = 0; i < 100; i++) _columns.add(_RainColumn(_random)); }
-  @override
-  void paint(Canvas canvas, Size size) { final paint = Paint(); for (final col in _columns) { col.update(time, size.height); for (final char in col.chars) { paint.color = const Color(0xFF00FF41).withOpacity(char.opacity); final tp = TextPainter(text: TextSpan(text: char.char, style: TextStyle(color: paint.color, fontSize: 12, fontFamily: 'monospace')), textDirection: TextDirection.ltr); tp.layout(); tp.paint(canvas, Offset(col.x, char.y)); } } }
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-class _RainColumn {
-  final double x; final double speed; final List<_RainChar> chars = []; final Random _random;
-  _RainColumn(this._random) : x = _random.nextDouble() * 1000, speed = _random.nextDouble() * 2 + 1 { for (int i = 0; i < _random.nextInt(20) + 5; i++) chars.add(_RainChar(_random, -_random.nextDouble() * 800)); }
-  void update(double time, double maxHeight) { for (final char in chars) { char.y += speed; char.opacity = (0.05 + 0.15 * (char.y / maxHeight)).clamp(0.02, 0.2); if (char.y > maxHeight) { char.y = 0; char.char = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي'[_random.nextInt(36)]; } } }
-}
-
-class _RainChar { double y; double opacity; String char; _RainChar(Random random, this.y) : opacity = 0.05 + random.nextDouble() * 0.15, char = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي'[random.nextInt(36)]; }
