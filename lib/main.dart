@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'src/features/onboarding/onboarding_screen.dart';
-import 'src/features/lock/lock_screen.dart';
-import 'src/features/desktop/glass_desktop.dart';
+import 'src/features/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,35 +11,38 @@ void main() async {
     DeviceOrientation.landscapeRight,
   ]);
   
-  final prefs = await SharedPreferences.getInstance();
-  final isFirstLaunch = prefs.getBool('first_launch') ?? true;
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+  ));
   
-  if (isFirstLaunch) {
-    await prefs.setBool('first_launch', false);
-  }
-  
-  runApp(ZionOS(isFirstLaunch: isFirstLaunch));
+  runApp(const ZionOS());
 }
 
 class ZionOS extends StatelessWidget {
-  final bool isFirstLaunch;
-  const ZionOS({super.key, required this.isFirstLaunch});
+  const ZionOS({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zion OS v3.1',
+      title: 'Zion OS v3.2',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: Colors.black,
         primaryColor: Colors.green,
       ),
-      initialRoute: isFirstLaunch ? '/onboarding' : '/lock',
+      initialRoute: '/splash',
       routes: {
+        '/splash': (context) => const SplashScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
         '/lock': (context) => const LockScreen(),
-        '/home': (context) => const GlassDesktop(),
+        '/home': (context) => const GlassDesktopOptimized(),
       },
     );
   }
 }
+
+// استيراد الشاشات المطلوبة
+import 'src/features/onboarding/onboarding_screen.dart';
+import 'src/features/lock/lock_screen.dart';
+import 'src/features/desktop/glass_desktop_optimized.dart';
