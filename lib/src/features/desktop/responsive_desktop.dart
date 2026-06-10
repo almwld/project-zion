@@ -1366,3 +1366,6 @@ IconButton(
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.psychology, 'label': 'AI Control', 'widget': const AIControlCenter(), 'color': Colors.cyan},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.device_hub, 'label': 'Network Infra', 'widget': const NetworkInfrastructureCenter(), 'color': Colors.blueGrey},
