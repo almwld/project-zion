@@ -512,3 +512,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.book, 'label': 'Docs', 'widget': const DocsCenter(), 'color': Colors.orange},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.speed, 'label': 'Performance', 'widget': const PerformanceMonitor(), 'color': Colors.teal},
