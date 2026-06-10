@@ -21,6 +21,7 @@ import '../exploits/exploit_database.dart';
 import '../payloads/payload_generator.dart';
 import '../qr/qr_scanner.dart';
 import '../power/power_management.dart';
+import '../cleaner/system_cleaner.dart';
 import '../notifications/notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
@@ -547,3 +548,6 @@ IconButton(
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.battery_std, 'label': 'Power', 'widget': const PowerManagement(), 'color': Colors.green},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.cleaning_services, 'label': 'Cleaner', 'widget': const SystemCleaner(), 'color': Colors.blue},
