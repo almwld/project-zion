@@ -717,3 +717,276 @@ Widget _buildStoreStat(String label, String value, Color color) {
 // إضافة الـ tab
 Tab(icon: Icon(Icons.storage), text: 'Store'),
 _buildStoreTab(),
+
+// ==================== Nix REPL Terminal ====================
+String _nixCommand = '';
+List<String> _terminalOutput = [];
+bool _isExecuting = false;
+final TextEditingController _nixCommandController = TextEditingController();
+final ScrollController _terminalScrollController = ScrollController();
+
+void _executeNixCommand() {
+  if (_nixCommandController.text.trim().isEmpty) return;
+  
+  setState(() {
+    _isExecuting = true;
+    _terminalOutput.add('zion@nix:~$ ${_nixCommandController.text}');
+  });
+  
+  Future.delayed(const Duration(milliseconds: 500), () {
+    setState(() {
+      _terminalOutput.add('> Command executed successfully');
+      _terminalOutput.add('');
+      _isExecuting = false;
+      _nixCommandController.clear();
+      _scrollToBottom();
+    });
+  });
+}
+
+void _scrollToBottom() {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (_terminalScrollController.hasClients) {
+      _terminalScrollController.animateTo(
+        _terminalScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  });
+}
+
+void _clearTerminal() {
+  setState(() {
+    _terminalOutput.clear();
+  });
+}
+
+Widget _buildNixReplTab() {
+  return Column(
+    children: [
+      Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade900,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            const Text('Nix REPL (Read-Eval-Print Loop)', style: TextStyle(color: Colors.cyan, fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            const Text('Execute Nix expressions interactively', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Container(
+          margin: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.cyan),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: _terminalScrollController,
+                  padding: const EdgeInsets.all(12),
+                  itemCount: _terminalOutput.length,
+                  itemBuilder: (ctx, i) => Text(
+                    _terminalOutput[i],
+                    style: TextStyle(
+                      color: _terminalOutput[i].startsWith('zion@nix:~$') ? Colors.green : Colors.white70,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade900,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Text('zion@nix:~$ ', style: TextStyle(color: Colors.green)),
+                    Expanded(
+                      child: TextField(
+                        controller: _nixCommandController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Enter Nix expression...',
+                          hintStyle: TextStyle(color: Colors.grey),
+                        ),
+                        onSubmitted: (_) => _executeNixCommand(),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.play_arrow, color: Colors.green),
+                      onPressed: _executeNixCommand,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.clear, color: Colors.red),
+                      onPressed: _clearTerminal,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+// ==================== Nix Search ====================
+String _searchQuery = '';
+List<NixSearchResult> _searchResults = [];
+bool _isSearching = false;
+
+void _searchNixPackages() {
+  if (_searchQuery.isEmpty) return;
+  
+  setState(() {
+    _isSearching = true;
+    _searchResults = [];
+  });
+  
+  Future.delayed(const Duration(seconds: 1), () {
+    setState(() {
+      _searchResults = [
+        NixSearchResult('${_searchQuery}', '${_searchQuery}-1.0.0', 'A package for ${_searchQuery}', 4.5, 12500),
+        NixSearchResult('${_searchQuery}-dev', '${_searchQuery}-dev-1.0.0', 'Development tools for ${_searchQuery}', 4.2, 3400),
+        NixSearchResult('${_searchQuery}-lib', '${_searchQuery}-lib-2.0.0', 'Libraries for ${_searchQuery}', 4.8, 8900),
+      ];
+      _isSearching = false;
+    });
+  });
+}
+
+Widget _buildNixSearchTab() {
+  return Column(
+    children: [
+      Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade900,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'Search Nix packages...',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.search, color: Colors.cyan),
+                ),
+                onChanged: (v) => _searchQuery = v,
+                onSubmitted: (_) => _searchNixPackages(),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: _searchNixPackages,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.cyan),
+              child: _isSearching ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Search'),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: ListView.builder(
+          itemCount: _searchResults.length,
+          itemBuilder: (ctx, i) {
+            final result = _searchResults[i];
+            return Card(
+              color: Colors.grey.shade900,
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: ListTile(
+                leading: const Icon(Icons.package, color: Colors.cyan),
+                title: Text(result.name, style: const TextStyle(color: Colors.white)),
+                subtitle: Text(result.description, style: const TextStyle(color: Colors.grey)),
+                trailing: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(result.version, style: const TextStyle(color: Colors.green)),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.star, size: 14, color: Colors.yellow),
+                        Text(' ${result.rating}', style: const TextStyle(color: Colors.white70)),
+                        const SizedBox(width: 8),
+                        Text('${(result.downloads / 1000).toStringAsFixed(0)}K', style: const TextStyle(color: Colors.white70)),
+                      ],
+                    ),
+                  ],
+                ),
+                onTap: () => _installSearchResult(result),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+void _installSearchResult(NixSearchResult result) {
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text('Install ${result.name}'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Package: ${result.name}', style: const TextStyle(color: Colors.white)),
+          Text('Version: ${result.version}', style: const TextStyle(color: Colors.white70)),
+          const SizedBox(height: 8),
+          Text('Running: nix profile install nixpkgs#${result.name}', style: const TextStyle(color: Colors.cyan, fontSize: 11)),
+        ],
+      ),
+      backgroundColor: Colors.grey.shade900,
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(ctx);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Installing ${result.name}...')),
+            );
+          },
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+          child: const Text('Install'),
+        ),
+      ],
+    ),
+  );
+}
+
+class NixSearchResult {
+  final String name;
+  final String version;
+  final String description;
+  final double rating;
+  final int downloads;
+
+  NixSearchResult(this.name, this.version, this.description, this.rating, this.downloads);
+}
+
+// إضافة الـ tabs
+// Tab(icon: Icon(Icons.terminal), text: 'REPL'),
+// Tab(icon: Icon(Icons.search), text: 'Search'),
+// _buildNixReplTab(),
+// _buildNixSearchTab(),
