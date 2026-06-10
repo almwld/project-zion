@@ -542,3 +542,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.location_city, 'label': 'Smart City', 'widget': const SmartCityCenter(), 'color': Colors.blue},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.bar_chart, 'label': 'Business', 'widget': const BusinessAnalytics(), 'color': Colors.indigo},
