@@ -70,7 +70,7 @@ class _PredictiveAnalyticsCenterState extends State<PredictiveAnalyticsCenter> {
       PredictionModel('Prophet', 'Facebook', 94.5, Icons.timeline, Colors.blue),
       PredictionModel('ARIMA', 'StatsModels', 92.3, Icons.show_chart, Colors.green),
       PredictionModel('LSTM', 'Deep Learning', 96.8, Icons.psychology, Colors.purple),
-      PredictionModel('Random Forest', 'Ensemble', 91.2, Icons.tree, Colors.orange),
+      PredictionModel('Random Forest', 'Ensemble', 91.2, Icons.account_tree, Colors.orange),
     ];
   }
 
@@ -234,7 +234,7 @@ class _PredictiveAnalyticsCenterState extends State<PredictiveAnalyticsCenter> {
                         color: Colors.orange,
                         barWidth: 2,
                         dotData: const FlDotData(show: false),
-                        dashedStroke: true,
+                        
                       ),
                     ],
                   ),

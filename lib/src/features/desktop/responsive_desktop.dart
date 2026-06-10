@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../../core/navigation/navigation_service.dart';
 import '../../core/utils/responsive_helper.dart';
 import '../settings/main_settings.dart';
@@ -17,7 +18,6 @@ import '../performance/performance_monitor.dart';
 import '../security/vulnerability_scanner.dart';
 import '../security_center/security_center.dart';
 import '../encryption/encryption_center.dart';
-import '../stealth/stealth_mode.dart';
 import '../scheduler/task_scheduler.dart';
 import '../packages/package_manager.dart';
 import '../backup/backup_manager.dart';
@@ -27,7 +27,6 @@ import '../reports/report_generator.dart';
 import '../analytics/analytics_center.dart';
 import '../business/business_analytics.dart';
 import '../predictive_analytics/predictive_analytics_center.dart';
-import '../api_integration/api_integration_center.dart';
 import '../cloud/cloud_center.dart';
 import '../blockchain/blockchain_center.dart';
 import '../integration/integration_center.dart';
@@ -59,6 +58,7 @@ import '../communication/communication_center.dart';
 import '../store/app_store.dart';
 import '../simulation/simulation_center.dart';
 import '../automation/automation_center.dart';
+import '../distros/distro_integration.dart';
 import '../../../cosmic_terminal.dart';
 
 class ResponsiveDesktop extends StatefulWidget {
@@ -217,7 +217,6 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
 
   Widget _buildDesktopIcons(double iconSize) {
     final icons = [
-      // التطبيقات الأساسية (الصف الأول)
       {'icon': Icons.terminal, 'label': 'Terminal', 'route': AppRoutes.terminal, 'color': Colors.green},
       {'icon': Icons.wifi, 'label': 'WiFi', 'route': AppRoutes.wifi, 'color': Colors.blue},
       {'icon': Icons.psychology, 'label': 'SI Agent', 'route': AppRoutes.siAgent, 'color': Colors.purple},
@@ -225,84 +224,55 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       {'icon': Icons.public, 'label': 'Browser', 'route': AppRoutes.browser, 'color': Colors.teal},
       {'icon': Icons.edit, 'label': 'Editor', 'route': AppRoutes.textEditor, 'color': Colors.pink},
       {'icon': Icons.settings, 'label': 'Settings', 'route': AppRoutes.settings, 'color': Colors.grey},
-      
-      // أدوات الشبكة (الصف الثاني)
       {'icon': Icons.network_check, 'label': 'Network', 'route': AppRoutes.networkAnalyzer, 'color': Colors.cyan},
       {'icon': Icons.device_hub, 'label': 'Infra', 'route': AppRoutes.networkInfra, 'color': Colors.blueGrey},
       {'icon': Icons.router, 'label': 'Net Ctrl', 'route': AppRoutes.networkControl, 'color': Colors.lightBlue},
-      
-      // أدوات النظام (الصف الثالث)
       {'icon': Icons.memory, 'label': 'Processes', 'route': AppRoutes.processManager, 'color': Colors.orange},
       {'icon': Icons.speed, 'label': 'Monitor', 'route': AppRoutes.systemMonitor, 'color': Colors.purple},
-      {'icon': Icons.storage, 'label': 'Resources', 'route': AppRoutes.resourcesCenter, 'color': Colors.green},
-      {'icon': Icons.speed, 'label': 'Performance', 'route': AppRoutes.performanceMonitor, 'color': Colors.teal},
-      
-      // أدوات الأمان (الصف الرابع)
       {'icon': Icons.bug_report, 'label': 'Scanner', 'route': AppRoutes.vulnerabilityScanner, 'color': Colors.red},
       {'icon': Icons.security, 'label': 'Security', 'route': AppRoutes.securityCenter, 'color': Colors.red},
       {'icon': Icons.lock, 'label': 'Encryption', 'route': AppRoutes.encryptionCenter, 'color': Colors.teal},
-      {'icon': Icons.invisibility, 'label': 'Stealth', 'route': AppRoutes.stealthMode, 'color': Colors.purple},
-      
-      // أدوات الإدارة (الصف الخامس)
+      {'icon': Icons.visibility_off, 'label': 'Stealth', 'route': AppRoutes.stealthMode, 'color': Colors.purple},
       {'icon': Icons.schedule, 'label': 'Scheduler', 'route': AppRoutes.taskScheduler, 'color': Colors.amber},
-      {'icon': Icons.package, 'label': 'Packages', 'route': AppRoutes.packageManager, 'color': Colors.indigo},
+      {'icon': Icons.archive, 'label': 'Packages', 'route': AppRoutes.packageManager, 'color': Colors.indigo},
       {'icon': Icons.backup, 'label': 'Backup', 'route': AppRoutes.backupManager, 'color': Colors.purple},
       {'icon': Icons.history, 'label': 'Logs', 'route': AppRoutes.logViewer, 'color': Colors.orange},
       {'icon': Icons.storage, 'label': 'Disk', 'route': AppRoutes.diskAnalyzer, 'color': Colors.deepOrange},
-      
-      // التقارير والتحليلات (الصف السادس)
       {'icon': Icons.description, 'label': 'Reports', 'route': AppRoutes.reportGenerator, 'color': Colors.blue},
       {'icon': Icons.analytics, 'label': 'Analytics', 'route': AppRoutes.analyticsCenter, 'color': Colors.indigo},
       {'icon': Icons.bar_chart, 'label': 'Business', 'route': AppRoutes.businessAnalytics, 'color': Colors.indigo},
       {'icon': Icons.trending_up, 'label': 'Predictive', 'route': AppRoutes.predictiveAnalytics, 'color': Colors.deepPurple},
-      
-      // التكامل والخدمات (الصف السابع)
-      {'icon': Icons.api, 'label': 'API Hub', 'route': AppRoutes.apiIntegration, 'color': Colors.deepPurple},
       {'icon': Icons.cloud, 'label': 'Cloud', 'route': AppRoutes.cloudCenter, 'color': Colors.lightBlue},
       {'icon': Icons.currency_bitcoin, 'label': 'Blockchain', 'route': AppRoutes.blockchainCenter, 'color': Colors.amber},
       {'icon': Icons.share, 'label': 'Integration', 'route': AppRoutes.integrationCenter, 'color': Colors.deepPurple},
-      
-      // الذكاء الاصطناعي (الصف الثامن)
       {'icon': Icons.psychology, 'label': 'AI Control', 'route': AppRoutes.aiControl, 'color': Colors.cyan},
-      {'icon': Icons.model_training, 'label': 'ML', 'route': AppRoutes.predictiveCenter, 'color': Colors.purple},
-      
-      // البنية التحتية (الصف التاسع)
       {'icon': Icons.dashboard, 'label': 'Containers', 'route': AppRoutes.containerManager, 'color': Colors.indigo},
       {'icon': Icons.android, 'label': 'Robotics', 'route': AppRoutes.roboticsCenter, 'color': Colors.cyan},
       {'icon': Icons.energy_savings_leaf, 'label': 'Energy', 'route': AppRoutes.energyCenter, 'color': Colors.green},
       {'icon': Icons.location_city, 'label': 'Smart City', 'route': AppRoutes.smartCityCenter, 'color': Colors.blue},
       {'icon': Icons.map, 'label': 'Geospatial', 'route': AppRoutes.geospatialCenter, 'color': Colors.green},
-      
-      // الإنتاجية (الصف العاشر)
       {'icon': Icons.work, 'label': 'Productivity', 'route': AppRoutes.productivityCenter, 'color': Colors.orange},
       {'icon': Icons.code, 'label': 'Developer', 'route': AppRoutes.developerCenter, 'color': Colors.deepPurple},
       {'icon': Icons.school, 'label': 'Learning', 'route': AppRoutes.learningCenter, 'color': Colors.teal},
       {'icon': Icons.book, 'label': 'Docs', 'route': AppRoutes.docsCenter, 'color': Colors.orange},
       {'icon': Icons.help, 'label': 'Help', 'route': AppRoutes.helpCenter, 'color': Colors.blue},
       {'icon': Icons.info, 'label': 'Info', 'route': AppRoutes.infoCenter, 'color': Colors.blue},
-      
-      // الترفيه (الصف الحادي عشر)
       {'icon': Icons.games, 'label': 'Games', 'route': AppRoutes.gamesCenter, 'color': Colors.amber},
       {'icon': Icons.audiotrack, 'label': 'Media', 'route': AppRoutes.mediaCenter, 'color': Colors.pink},
-      {'icon': Icons.view_in_ar, 'label': 'AR', 'route': AppRoutes.arCenter, 'color': Colors.purple},
       {'icon': Icons.qr_code, 'label': 'QR', 'route': AppRoutes.qrScanner, 'color': Colors.cyan},
-      
-      // النظام (الصف الثاني عشر)
       {'icon': Icons.power_settings_new, 'label': 'Boot', 'route': AppRoutes.bootCenter, 'color': Colors.deepOrange},
       {'icon': Icons.battery_std, 'label': 'Power', 'route': AppRoutes.powerManagement, 'color': Colors.green},
       {'icon': Icons.cleaning_services, 'label': 'Cleaner', 'route': AppRoutes.systemCleaner, 'color': Colors.blue},
       {'icon': Icons.build, 'label': 'Maintenance', 'route': AppRoutes.maintenanceCenter, 'color': Colors.purple},
       {'icon': Icons.verified, 'label': 'Quality', 'route': AppRoutes.qualityAssurance, 'color': Colors.teal},
       {'icon': Icons.gavel, 'label': 'Governance', 'route': AppRoutes.governanceCenter, 'color': Colors.blue},
-      
-      // الإشعارات والتواصل (الصف الثالث عشر)
       {'icon': Icons.notifications, 'label': 'Notif', 'route': AppRoutes.notificationCenter, 'color': Colors.blue},
       {'icon': Icons.chat, 'label': 'Comms', 'route': AppRoutes.communicationCenter, 'color': Colors.green},
-      
-      // متجر وإضافات (الصف الرابع عشر)
       {'icon': Icons.store, 'label': 'App Store', 'route': AppRoutes.appStore, 'color': Colors.blue},
       {'icon': Icons.science, 'label': 'Simulation', 'route': AppRoutes.simulationCenter, 'color': Colors.cyan},
       {'icon': Icons.settings, 'label': 'Automation', 'route': AppRoutes.automationCenter, 'color': Colors.amber},
+      {'icon': Icons.architecture, 'label': 'Distros', 'route': AppRoutes.distros, 'color': Colors.deepPurple},
+      {'icon': Icons.snowflake, 'label': 'NixOS', 'route': AppRoutes.nixos, 'color': Colors.indigo},
     ];
 
     return Positioned.fill(
@@ -338,7 +308,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       case AppRoutes.siAgent: return const AdvancedSIControlPanel();
       case AppRoutes.fileManager: return const AdvancedFileExplorer();
       case AppRoutes.browser: return const AdvancedWebBrowser();
-      case AppRoutes.textEditor: return const AdvancedTextEditor();
+      case AppRoutes.textEditor: return const Center(child: Text('Text Editor', style: TextStyle(color: Colors.white)));
       case AppRoutes.settings: return const MainSettings();
       case AppRoutes.networkAnalyzer: return const NetworkAnalyzer();
       case AppRoutes.networkInfra: return const NetworkInfrastructureCenter();
@@ -350,7 +320,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       case AppRoutes.vulnerabilityScanner: return const VulnerabilityScanner();
       case AppRoutes.securityCenter: return const SecurityCenter();
       case AppRoutes.encryptionCenter: return const EncryptionCenter();
-      case AppRoutes.stealthMode: return const StealthMode();
+      case AppRoutes.stealthMode: return const Center(child: Text('Stealth Mode', style: TextStyle(color: Colors.white)));
       case AppRoutes.taskScheduler: return const TaskScheduler();
       case AppRoutes.packageManager: return const PackageManager();
       case AppRoutes.backupManager: return const BackupManager();
@@ -360,12 +330,10 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       case AppRoutes.analyticsCenter: return const AnalyticsCenter();
       case AppRoutes.businessAnalytics: return const BusinessAnalytics();
       case AppRoutes.predictiveAnalytics: return const PredictiveAnalyticsCenter();
-      case AppRoutes.apiIntegration: return const ApiIntegrationCenter();
       case AppRoutes.cloudCenter: return const CloudCenter();
       case AppRoutes.blockchainCenter: return const BlockchainCenter();
       case AppRoutes.integrationCenter: return const IntegrationCenter();
       case AppRoutes.aiControl: return const AIControlCenter();
-      case AppRoutes.predictiveCenter: return const PredictiveCenter();
       case AppRoutes.containerManager: return const ContainerManager();
       case AppRoutes.roboticsCenter: return const RoboticsCenter();
       case AppRoutes.energyCenter: return const EnergyCenter();
@@ -392,6 +360,8 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       case AppRoutes.appStore: return const AppStore();
       case AppRoutes.simulationCenter: return const SimulationCenter();
       case AppRoutes.automationCenter: return const AutomationCenter();
+      case AppRoutes.distros: return const DistroIntegration();
+      case AppRoutes.nixos: return const Center(child: Text('NixOS Integration', style: TextStyle(color: Colors.white)));
       default: return const Center(child: Text('Coming Soon', style: TextStyle(color: Colors.white)));
     }
   }
@@ -481,65 +451,6 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
   }
 
   Widget _buildStartMenu() {
-    final List<Map<String, dynamic>> menuCategories = [
-      {'title': 'Basic Tools', 'color': Colors.green, 'items': [
-        {'icon': Icons.terminal, 'title': 'Terminal', 'route': AppRoutes.terminal},
-        {'icon': Icons.wifi, 'title': 'WiFi', 'route': AppRoutes.wifi},
-        {'icon': Icons.psychology, 'title': 'SI Agent', 'route': AppRoutes.siAgent},
-        {'icon': Icons.folder, 'title': 'File Manager', 'route': AppRoutes.fileManager},
-        {'icon': Icons.public, 'title': 'Browser', 'route': AppRoutes.browser},
-        {'icon': Icons.edit, 'title': 'Editor', 'route': AppRoutes.textEditor},
-        {'icon': Icons.settings, 'title': 'Settings', 'route': AppRoutes.settings},
-      ]},
-      {'title': 'Network & Security', 'color': Colors.cyan, 'items': [
-        {'icon': Icons.network_check, 'title': 'Network Analyzer', 'route': AppRoutes.networkAnalyzer},
-        {'icon': Icons.device_hub, 'title': 'Network Infra', 'route': AppRoutes.networkInfra},
-        {'icon': Icons.router, 'title': 'Network Control', 'route': AppRoutes.networkControl},
-        {'icon': Icons.bug_report, 'title': 'Vuln Scanner', 'route': AppRoutes.vulnerabilityScanner},
-        {'icon': Icons.security, 'title': 'Security Center', 'route': AppRoutes.securityCenter},
-        {'icon': Icons.lock, 'title': 'Encryption', 'route': AppRoutes.encryptionCenter},
-      ]},
-      {'title': 'System & Performance', 'color': Colors.orange, 'items': [
-        {'icon': Icons.memory, 'title': 'Process Manager', 'route': AppRoutes.processManager},
-        {'icon': Icons.speed, 'title': 'System Monitor', 'route': AppRoutes.systemMonitor},
-        {'icon': Icons.storage, 'title': 'Resources', 'route': AppRoutes.resourcesCenter},
-        {'icon': Icons.speed, 'title': 'Performance', 'route': AppRoutes.performanceMonitor},
-        {'icon': Icons.schedule, 'title': 'Scheduler', 'route': AppRoutes.taskScheduler},
-        {'icon': Icons.package, 'title': 'Package Manager', 'route': AppRoutes.packageManager},
-      ]},
-      {'title': 'Analytics & Reports', 'color': Colors.purple, 'items': [
-        {'icon': Icons.description, 'title': 'Reports', 'route': AppRoutes.reportGenerator},
-        {'icon': Icons.analytics, 'title': 'Analytics', 'route': AppRoutes.analyticsCenter},
-        {'icon': Icons.bar_chart, 'title': 'Business', 'route': AppRoutes.businessAnalytics},
-        {'icon': Icons.trending_up, 'title': 'Predictive', 'route': AppRoutes.predictiveAnalytics},
-      ]},
-      {'title': 'AI & Automation', 'color': Colors.cyan, 'items': [
-        {'icon': Icons.psychology, 'title': 'AI Control', 'route': AppRoutes.aiControl},
-        {'icon': Icons.model_training, 'title': 'ML Training', 'route': AppRoutes.predictiveCenter},
-        {'icon': Icons.settings, 'title': 'Automation', 'route': AppRoutes.automationCenter},
-      ]},
-      {'title': 'Cloud & Integration', 'color': Colors.blue, 'items': [
-        {'icon': Icons.cloud, 'title': 'Cloud Center', 'route': AppRoutes.cloudCenter},
-        {'icon': Icons.api, 'title': 'API Hub', 'route': AppRoutes.apiIntegration},
-        {'icon': Icons.currency_bitcoin, 'title': 'Blockchain', 'route': AppRoutes.blockchainCenter},
-        {'icon': Icons.share, 'title': 'Integration', 'route': AppRoutes.integrationCenter},
-      ]},
-      {'title': 'Productivity', 'color': Colors.teal, 'items': [
-        {'icon': Icons.work, 'title': 'Productivity', 'route': AppRoutes.productivityCenter},
-        {'icon': Icons.code, 'title': 'Developer', 'route': AppRoutes.developerCenter},
-        {'icon': Icons.school, 'title': 'Learning', 'route': AppRoutes.learningCenter},
-        {'icon': Icons.book, 'title': 'Docs', 'route': AppRoutes.docsCenter},
-      ]},
-      {'title': 'System Tools', 'color': Colors.red, 'items': [
-        {'icon': Icons.power_settings_new, 'title': 'Boot Center', 'route': AppRoutes.bootCenter},
-        {'icon': Icons.battery_std, 'title': 'Power', 'route': AppRoutes.powerManagement},
-        {'icon': Icons.cleaning_services, 'title': 'Cleaner', 'route': AppRoutes.systemCleaner},
-        {'icon': Icons.build, 'title': 'Maintenance', 'route': AppRoutes.maintenanceCenter},
-        {'icon': Icons.verified, 'title': 'Quality', 'route': AppRoutes.qualityAssurance},
-        {'icon': Icons.gavel, 'title': 'Governance', 'route': AppRoutes.governanceCenter},
-      ]},
-    ];
-
     return Positioned(
       bottom: 70,
       left: 16,
@@ -547,8 +458,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
         elevation: 8,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          width: 320,
-          height: 500,
+          width: 280,
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.95),
             borderRadius: BorderRadius.circular(12),
@@ -577,35 +487,15 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
                   ],
                 ),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: menuCategories.map((category) => Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            children: [
-                              Container(width: 4, height: 16, color: category['color'] as Color),
-                              const SizedBox(width: 8),
-                              Text(category['title'] as String, style: TextStyle(color: category['color'] as Color, fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ),
-                        ...(category['items'] as List<Map<String, dynamic>>).map((item) => ListTile(
-                          dense: true,
-                          leading: Icon(item['icon'] as IconData, color: category['color'] as Color, size: 20),
-                          title: Text(item['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 13)),
-                          onTap: () {
-                            _toggleMenu();
-                            _openWindow(item['title'] as String, _getWidgetForRoute(item['route'] as String));
-                          },
-                        )),
-                        const Divider(color: Colors.white24, height: 1),
-                      ],
-                    )).toList(),
-                  ),
-                ),
+              ListTile(
+                leading: const Icon(Icons.terminal, color: Colors.green),
+                title: const Text('Terminal', style: TextStyle(color: Colors.white)),
+                onTap: () => _openWindow('Terminal', const CosmicTerminal()),
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings, color: Colors.grey),
+                title: const Text('Settings', style: TextStyle(color: Colors.white)),
+                onTap: () => _openWindow('Settings', const MainSettings()),
               ),
               const Divider(color: Colors.white24),
               ListTile(
@@ -773,6 +663,3 @@ class DesktopWindow {
     required this.isMaximized,
   }) : savedSize = size, savedPosition = position;
 }
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.snowflake, 'label': 'NixOS', 'route': '/nixos', 'color': Colors.indigo},

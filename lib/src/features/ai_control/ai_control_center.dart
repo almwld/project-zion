@@ -313,7 +313,7 @@ class _AIControlCenterState extends State<AIControlCenter> {
                       value: layer.activity,
                       backgroundColor: Colors.grey.shade800,
                       color: Colors.purple,
-                      width: 100,
+                      
                     ),
                   ],
                 ),
