@@ -20,6 +20,7 @@ import '../backup/backup_manager.dart';
 import '../exploits/exploit_database.dart';
 import '../payloads/payload_generator.dart';
 import '../qr/qr_scanner.dart';
+import '../power/power_management.dart';
 import '../notifications/notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
@@ -543,3 +544,6 @@ IconButton(
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.notifications, 'label': 'Notifications', 'widget': const NotificationCenter(), 'color': Colors.blue},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.battery_std, 'label': 'Power', 'widget': const PowerManagement(), 'color': Colors.green},

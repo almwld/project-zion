@@ -6,6 +6,8 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
+  battery_plus: ^5.0.0
+  power_settings: ^2.0.0
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.5.1
@@ -26,6 +28,8 @@ dependencies:
   flutter_local_notifications: ^16.3.0
 
 dev_dependencies:
+  battery_plus: ^5.0.0
+  power_settings: ^2.0.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
