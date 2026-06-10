@@ -22,23 +22,15 @@ jobs:
         with:
           flutter-version: '3.22.0'
           channel: 'stable'
-          cache: true
       
       - name: Create local.properties
         run: |
-          echo "flutter.sdk=${{ env.FLUTTER_HOME }}" > android/local.properties
-          echo "flutter.buildMode=release" >> android/local.properties
+          FLUTTER_PATH=$(which flutter)
+          FLUTTER_HOME=$(dirname $(dirname $FLUTTER_PATH))
+          echo "flutter.sdk=$FLUTTER_HOME" > android/local.properties
+          echo "flutter.versionCode=10" >> android/local.properties
+          echo "flutter.versionName=3.3.0" >> android/local.properties
           cat android/local.properties
-      
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pub-cache
-            build/
-          key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-flutter-
       
       - name: Create missing asset directories
         run: |
