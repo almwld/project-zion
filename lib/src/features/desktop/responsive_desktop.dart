@@ -4,7 +4,7 @@ import '../../core/utils/responsive_helper.dart';
 import '../settings/main_settings.dart';
 import '../wifi/zion_wifi_panel.dart';
 import '../si/si_control_panel.dart';
-import '../windows/zion_file_manager.dart';
+import '../windows/advanced_file_explorer.dart';
 import '../windows/zion_browser.dart';
 import '../windows/zion_text_editor.dart';
 import '../network/network_analyzer.dart';
@@ -198,7 +198,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       {'icon': Icons.terminal, 'label': 'Terminal', 'widget': const CosmicTerminal(), 'color': Colors.green},
       {'icon': Icons.wifi, 'label': 'WiFi', 'widget': const ZionWifiPanel(), 'color': Colors.blue},
       {'icon': Icons.psychology, 'label': 'SI Agent', 'widget': const SIControlPanel(), 'color': Colors.purple},
-      {'icon': Icons.folder, 'label': 'Files', 'widget': const ZionFileManager(), 'color': Colors.orange},
+      {'icon': Icons.folder, 'label': 'Files', 'widget': const AdvancedFileExplorer(), 'color': Colors.orange},
       {'icon': Icons.public, 'label': 'Browser', 'widget': const ZionBrowser(), 'color': Colors.teal},
       {'icon': Icons.edit, 'label': 'Editor', 'widget': const ZionTextEditor(), 'color': Colors.pink},
       {'icon': Icons.settings, 'label': 'Settings', 'widget': const MainSettings(), 'color': Colors.grey},
@@ -320,7 +320,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       {'icon': Icons.terminal, 'title': 'Terminal', 'widget': const CosmicTerminal(), 'color': Colors.green},
       {'icon': Icons.wifi, 'title': 'WiFi', 'widget': const ZionWifiPanel(), 'color': Colors.blue},
       {'icon': Icons.psychology, 'title': 'SI Agent', 'widget': const SIControlPanel(), 'color': Colors.purple},
-      {'icon': Icons.folder, 'title': 'File Manager', 'widget': const ZionFileManager(), 'color': Colors.orange},
+      {'icon': Icons.folder, 'title': 'File Manager', 'widget': const AdvancedFileExplorer(), 'color': Colors.orange},
       {'icon': Icons.public, 'title': 'Browser', 'widget': const ZionBrowser(), 'color': Colors.teal},
       {'icon': Icons.edit, 'title': 'Editor', 'widget': const ZionTextEditor(), 'color': Colors.pink},
       {'icon': Icons.settings, 'title': 'Settings', 'widget': const MainSettings(), 'color': Colors.grey},
