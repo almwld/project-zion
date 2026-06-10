@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/responsive_helper.dart';
 import '../settings/main_settings.dart';
 import '../wifi/zion_wifi_panel.dart';
 import '../si/advanced_si_control_panel.dart';
 import '../windows/advanced_file_explorer.dart';
 import '../windows/advanced_web_browser.dart';
-import '../windows/zion_text_editor.dart';
+import '../windows/advanced_text_editor.dart';
 import '../network/network_analyzer.dart';
 import '../system/process_manager.dart';
 import '../system/system_monitor.dart';
@@ -20,716 +19,9 @@ import '../backup/backup_manager.dart';
 import '../exploits/exploit_database.dart';
 import '../payloads/payload_generator.dart';
 import '../qr/qr_scanner.dart';
-import '../power/power_management.dart';
-import '../cleaner/system_cleaner.dart';
-import '../security_center/security_center.dart';
-import '../tasks/advanced_task_manager.dart';
-import '../downloads/download_manager.dart';
-import '../network_control/network_control_center.dart';
-import '../maintenance/maintenance_center.dart';
-import '../backup_restore/backup_restore_center.dart';
-import '../monitoring/monitoring_center.dart';
-import '../games/games_center.dart';
-import '../learning/learning_center.dart';
-import '../store/app_store.dart';
-import '../help/help_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../downloads/download_manager.dart';
-import '../network_control/network_control_center.dart';
-import '../maintenance/maintenance_center.dart';
-import '../backup_restore/backup_restore_center.dart';
-import '../monitoring/monitoring_center.dart';
-import '../games/games_center.dart';
-import '../learning/learning_center.dart';
-import '../store/app_store.dart';
-import '../help/help_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../downloads/download_manager.dart';
-import '../network_control/network_control_center.dart';
-import '../maintenance/maintenance_center.dart';
-import '../backup_restore/backup_restore_center.dart';
-import '../monitoring/monitoring_center.dart';
-import '../games/games_center.dart';
-import '../learning/learning_center.dart';
-import '../store/app_store.dart';
-import '../help/help_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../security_center/security_center.dart';
-import '../tasks/advanced_task_manager.dart';
-import '../downloads/download_manager.dart';
-import '../network_control/network_control_center.dart';
-import '../maintenance/maintenance_center.dart';
-import '../backup_restore/backup_restore_center.dart';
-import '../monitoring/monitoring_center.dart';
-import '../games/games_center.dart';
-import '../learning/learning_center.dart';
-import '../store/app_store.dart';
-import '../help/help_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../downloads/download_manager.dart';
-import '../network_control/network_control_center.dart';
-import '../maintenance/maintenance_center.dart';
-import '../backup_restore/backup_restore_center.dart';
-import '../monitoring/monitoring_center.dart';
-import '../games/games_center.dart';
-import '../learning/learning_center.dart';
-import '../store/app_store.dart';
-import '../help/help_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../downloads/download_manager.dart';
-import '../network_control/network_control_center.dart';
-import '../maintenance/maintenance_center.dart';
-import '../backup_restore/backup_restore_center.dart';
-import '../monitoring/monitoring_center.dart';
-import '../games/games_center.dart';
-import '../learning/learning_center.dart';
-import '../store/app_store.dart';
-import '../help/help_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../media/media_center.dart';
-import '../productivity/productivity_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../developer/developer_center.dart';
-import '../communication/communication_center.dart';
-import '../reports_analytics/reports_center.dart';
-import '../advanced_settings/advanced_settings.dart';
-import '../info/info_center.dart';
-import '../simulation/simulation_center.dart';
-import '../boot/boot_center.dart';
-import '../encryption/encryption_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../ar/ar_center.dart';
-import '../predictive/predictive_center.dart';
-import '../integration/integration_center.dart';
-import '../governance/governance_center.dart';
-import '../resources/resources_center.dart';
-import '../cloud/cloud_center.dart';
-import '../automation/automation_center.dart';
-import '../../widgets/performance_analyzer.dart';
-import '../analytics/analytics_center.dart';
-import '../notifications/advanced_notification_center.dart';
 import '../../../cosmic_terminal.dart';
+import '../notifications/advanced_notification_center.dart';
+import '../../widgets/performance_analyzer.dart';
 
 class ResponsiveDesktop extends StatefulWidget {
   const ResponsiveDesktop({super.key});
@@ -755,23 +47,14 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
     });
   }
 
-  void _openWindow(String title, Widget content, {Size? size}) {
-    final screenSize = MediaQuery.of(context).size;
-    final defaultSize = Size(
-      ResponsiveHelper.getWindowWidth(context, 850),
-      ResponsiveHelper.getWindowHeight(context, 650),
-    );
-    
+  void _openWindow(String title, Widget content, {Size size = const Size(850, 650)}) {
     setState(() {
       _windows.add(DesktopWindow(
         id: _nextWindowId++,
         title: title,
         content: content,
-        position: Offset(
-          50 + (_windows.length % 5) * 30,
-          50 + (_windows.length % 5) * 30,
-        ),
-        size: size ?? defaultSize,
+        position: Offset(50 + (_windows.length % 5) * 30, 50 + (_windows.length % 5) * 30),
+        size: size,
         isMinimized: false,
         isMaximized: false,
       ));
@@ -804,10 +87,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
         if (_windows[index].isMaximized) {
           _windows[index].savedSize = _windows[index].size;
           _windows[index].savedPosition = _windows[index].position;
-          _windows[index].size = Size(
-            MediaQuery.of(context).size.width - 40,
-            MediaQuery.of(context).size.height - 100,
-          );
+          _windows[index].size = const Size(double.infinity, double.infinity);
           _windows[index].position = Offset.zero;
         } else {
           _windows[index].size = _windows[index].savedSize;
@@ -859,20 +139,19 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = ResponsiveHelper.isMobile(context) ? 40.0 : 48.0;
+    final fontSize = ResponsiveHelper.isMobile(context) ? 10.0 : 12.0;
+    
     return Scaffold(
       backgroundColor: Colors.black,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            children: [
-              _buildBackground(),
-              _buildDesktopIcons(),
-              ..._windows.where((w) => !w.isMinimized).map((w) => _buildWindow(w)),
-              if (_menuOpen) _buildStartMenu(),
-              _buildTaskbar(),
-            ],
-          );
-        },
+      body: Stack(
+        children: [
+          _buildBackground(),
+          _buildDesktopIcons(iconSize),
+          ..._windows.where((w) => !w.isMinimized).map((w) => _buildWindow(w)),
+          if (_menuOpen) _buildStartMenu(),
+          _buildTaskbar(iconSize, fontSize),
+        ],
       ),
     );
   }
@@ -886,45 +165,39 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
           colors: [Color(0xFF00FF41), Colors.black],
         ),
       ),
-      child: Center(
+      child: const Center(
         child: Text(
           'ZION OS\nv3.3',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: ResponsiveHelper.getFontSize(context, 48),
-            fontWeight: FontWeight.bold,
-            shadows: const [Shadow(color: Color(0xFF00FF41), blurRadius: 10)],
-          ),
+          style: TextStyle(color: Colors.white, fontSize: 48, fontWeight: FontWeight.bold, shadows: [
+            Shadow(color: Color(0xFF00FF41), blurRadius: 10),
+          ]),
         ),
       ),
     );
   }
 
-  Widget _buildDesktopIcons() {
+  Widget _buildDesktopIcons(double iconSize) {
     final icons = [
       {'icon': Icons.terminal, 'label': 'Terminal', 'widget': const CosmicTerminal(), 'color': Colors.green},
       {'icon': Icons.wifi, 'label': 'WiFi', 'widget': const ZionWifiPanel(), 'color': Colors.blue},
       {'icon': Icons.psychology, 'label': 'SI Agent', 'widget': const AdvancedSIControlPanel(), 'color': Colors.purple},
       {'icon': Icons.folder, 'label': 'Files', 'widget': const AdvancedFileExplorer(), 'color': Colors.orange},
       {'icon': Icons.public, 'label': 'Browser', 'widget': const AdvancedWebBrowser(), 'color': Colors.teal},
-      {'icon': Icons.edit, 'label': 'Editor', 'widget': const ZionTextEditor(), 'color': Colors.pink},
+      {'icon': Icons.edit, 'label': 'Editor', 'widget': const AdvancedTextEditor(), 'color': Colors.pink},
       {'icon': Icons.settings, 'label': 'Settings', 'widget': const MainSettings(), 'color': Colors.grey},
     ];
 
-    final iconSize = ResponsiveHelper.getIconSize(context);
-    final gridColumns = ResponsiveHelper.getDesktopGridColumns(context);
-
     return Positioned.fill(
       child: Padding(
-        padding: ResponsiveHelper.getDesktopPadding(context),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: ResponsiveHelper.getFontSize(context, 40)),
+            const SizedBox(height: 40),
             Wrap(
-              spacing: ResponsiveHelper.getFontSize(context, 30),
-              runSpacing: ResponsiveHelper.getFontSize(context, 30),
+              spacing: 30,
+              runSpacing: 30,
               children: icons.map((icon) => _DesktopIcon(
                 icon: icon['icon'] as IconData,
                 label: icon['label'] as String,
@@ -1030,7 +303,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
       {'icon': Icons.psychology, 'title': 'SI Agent', 'widget': const AdvancedSIControlPanel(), 'color': Colors.purple},
       {'icon': Icons.folder, 'title': 'File Manager', 'widget': const AdvancedFileExplorer(), 'color': Colors.orange},
       {'icon': Icons.public, 'title': 'Browser', 'widget': const AdvancedWebBrowser(), 'color': Colors.teal},
-      {'icon': Icons.edit, 'title': 'Editor', 'widget': const ZionTextEditor(), 'color': Colors.pink},
+      {'icon': Icons.edit, 'title': 'Editor', 'widget': const AdvancedTextEditor(), 'color': Colors.pink},
       {'icon': Icons.settings, 'title': 'Settings', 'widget': const MainSettings(), 'color': Colors.grey},
       const {'icon': Icons.exit_to_app, 'title': 'Exit', 'color': Colors.red},
     ];
@@ -1042,7 +315,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
         elevation: 8,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          width: ResponsiveHelper.isMobile(context) ? 250 : 280,
+          width: 280,
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.95),
             borderRadius: BorderRadius.circular(12),
@@ -1073,7 +346,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
               ),
               ...menuItems.map((item) => ListTile(
                 leading: Icon(item['icon'] as IconData, color: item['color'] as Color? ?? const Color(0xFF00FF41)),
-                title: Text(item['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 13)),
+                title: Text(item['title'] as String, style: const TextStyle(color: Colors.white)),
                 onTap: () {
                   _toggleMenu();
                   if (item['title'] == 'Exit') {
@@ -1090,7 +363,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
     );
   }
 
-  Widget _buildTaskbar() {
+  Widget _buildTaskbar(double iconSize, double fontSize) {
     return Positioned(
       bottom: 0, left: 0, right: 0,
       child: Container(
@@ -1133,16 +406,15 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
                 ),
               ),
             ),
-            _buildSystemTray(),
-            _buildClock(),
+            _buildSystemTray(iconSize),
+            _buildClock(fontSize),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSystemTray() {
-    final iconSize = ResponsiveHelper.isMobile(context) ? 14 : 18;
+  Widget _buildSystemTray(double iconSize) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
@@ -1157,8 +429,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
     );
   }
 
-  Widget _buildClock() {
-    final fontSize = ResponsiveHelper.isMobile(context) ? 10 : 12;
+  Widget _buildClock(double fontSize) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -1238,134 +509,3 @@ class DesktopWindow {
     required this.isMaximized,
   }) : savedSize = size, savedPosition = position;
 }
-
-// إضافة في _buildSystemTray
-IconButton(
-  icon: const Icon(Icons.notifications, color: Colors.white),
-  onPressed: () {
-    _openWindow('Notification Center', const AdvancedNotificationCenter(), size: const Size(400, 600));
-  },
-  padding: EdgeInsets.zero,
-  constraints: const BoxConstraints(),
-),
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.notifications, 'label': 'Notifications', 'widget': const AdvancedNotificationCenter(), 'color': Colors.blue},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.battery_std, 'label': 'Power', 'widget': const PowerManagement(), 'color': Colors.green},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.cleaning_services, 'label': 'Cleaner', 'widget': const SystemCleaner(), 'color': Colors.blue},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.security, 'label': 'Security', 'widget': const SecurityCenter(), 'color': Colors.red},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.security, 'label': 'Security', 'widget': const SecurityCenter(), 'color': Colors.red},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.task, 'label': 'Tasks', 'widget': const AdvancedTaskManager(), 'color': Colors.teal},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.download, 'label': 'Downloads', 'widget': const DownloadManager(), 'color': Colors.orange},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.router, 'label': 'Network Ctrl', 'widget': const NetworkControlCenter(), 'color': Colors.cyan},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.build, 'label': 'Maintenance', 'widget': const MaintenanceCenter(), 'color': Colors.purple},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.backup, 'label': 'Backup', 'widget': const BackupRestoreCenter(), 'color': Colors.indigo},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.analytics, 'label': 'Monitoring', 'widget': const MonitoringCenter(), 'color': Colors.lime},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.games, 'label': 'Games', 'widget': const GamesCenter(), 'color': Colors.amber},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.school, 'label': 'Learning', 'widget': const LearningCenter(), 'color': Colors.teal},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.store, 'label': 'App Store', 'widget': const AppStore(), 'color': Colors.blue},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.help, 'label': 'Help', 'widget': const HelpCenter(), 'color': Colors.blue},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.audiotrack, 'label': 'Media', 'widget': const MediaCenter(), 'color': Colors.pink},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.audiotrack, 'label': 'Media', 'widget': const MediaCenter(), 'color': Colors.pink},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.work, 'label': 'Productivity', 'widget': const ProductivityCenter(), 'color': Colors.orange},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.developer_mode, 'label': 'Developer', 'widget': const DeveloperCenter(), 'color': Colors.deepPurple},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.developer_mode, 'label': 'Developer', 'widget': const DeveloperCenter(), 'color': Colors.deepPurple},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.chat, 'label': 'Communications', 'widget': const CommunicationCenter(), 'color': Colors.green},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.analytics, 'label': 'Reports', 'widget': const ReportsCenter(), 'color': Colors.indigo},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.tune, 'label': 'Advanced Settings', 'widget': const AdvancedSettings(), 'color': Colors.grey},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.info, 'label': 'Info', 'widget': const InfoCenter(), 'color': Colors.blue},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.science, 'label': 'Simulation', 'widget': const SimulationCenter(), 'color': Colors.cyan},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.power_settings_new, 'label': 'Boot Center', 'widget': const BootCenter(), 'color': Colors.deepOrange},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.encryption, 'label': 'Encryption', 'widget': const EncryptionCenter(), 'color': Colors.teal},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.view_in_ar, 'label': 'AR Center', 'widget': const ARCenter(), 'color': Colors.purple},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.trending_up, 'label': 'Predictive AI', 'widget': const PredictiveCenter(), 'color': Colors.indigo},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.share, 'label': 'Integration', 'widget': const IntegrationCenter(), 'color': Colors.deepPurple},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.gavel, 'label': 'Governance', 'widget': const GovernanceCenter(), 'color': Colors.blue},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.storage, 'label': 'Resources', 'widget': const ResourcesCenter(), 'color': Colors.green},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.cloud_circle, 'label': 'Cloud', 'widget': const CloudCenter(), 'color': Colors.lightBlue},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.settings, 'label': 'Automation', 'widget': const AutomationCenter(), 'color': Colors.amber},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.analytics, 'label': 'Analytics', 'widget': const AnalyticsCenter(), 'color': Colors.blueGrey},
-
-// إضافة في بداية Stack في build method
-// بعد _buildBackground() وقبل _buildDesktopIcons()
-
-          // Performance Analyzer - أعلى يسار
-          Positioned(
-            top: 10,
-            left: 10,
-            child: const AdvancedPerformanceAnalyzer(),
-          ),
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.psychology, 'label': 'AI Control', 'widget': const AIControlCenter(), 'color': Colors.cyan},
-
-// إضافة في قائمة icons في _buildDesktopIcons
-{'icon': Icons.device_hub, 'label': 'Network Infra', 'widget': const NetworkInfrastructureCenter(), 'color': Colors.blueGrey},
