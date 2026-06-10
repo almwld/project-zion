@@ -515,3 +515,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.speed, 'label': 'Performance', 'widget': const PerformanceMonitor(), 'color': Colors.teal},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.dashboard, 'label': 'Containers', 'widget': const ContainerManager(), 'color': Colors.indigo},
