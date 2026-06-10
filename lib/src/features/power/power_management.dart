@@ -53,11 +53,18 @@ class _PowerManagementState extends State<PowerManagement> {
     super.dispose();
   }
 
-  String _getBatteryColor() {
-    if (_batteryLevel <= 15) return '🔴';
-    if (_batteryLevel <= 30) return '🟠';
-    if (_batteryLevel <= 60) return '🟡';
-    return '🟢';
+  String _getBatteryStatus() {
+    if (_isCharging) return 'Charging';
+    if (_batteryLevel <= 15) return 'Critical';
+    if (_batteryLevel <= 30) return 'Low';
+    return 'Normal';
+  }
+
+  Color _getBatteryColor() {
+    if (_batteryLevel <= 15) return Colors.red;
+    if (_batteryLevel <= 30) return Colors.orange;
+    if (_batteryLevel <= 60) return Colors.yellow;
+    return Colors.green;
   }
 
   @override
@@ -87,7 +94,7 @@ class _PowerManagementState extends State<PowerManagement> {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.battery_full, color: Colors.white, size: 48),
+                      Icon(Icons.battery_full, color: _getBatteryColor(), size: 48),
                       const SizedBox(width: 16),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +104,7 @@ class _PowerManagementState extends State<PowerManagement> {
                             style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            _isCharging ? 'Charging $_getBatteryColor' : 'Discharging $_getBatteryColor',
+                            _getBatteryStatus(),
                             style: const TextStyle(color: Colors.white70),
                           ),
                         ],
@@ -108,7 +115,7 @@ class _PowerManagementState extends State<PowerManagement> {
                   LinearProgressIndicator(
                     value: _batteryLevel / 100,
                     backgroundColor: Colors.grey.shade800,
-                    color: _batteryLevel > 60 ? Colors.green : (_batteryLevel > 30 ? Colors.orange : Colors.red),
+                    color: _getBatteryColor(),
                     minHeight: 8,
                   ),
                 ],
