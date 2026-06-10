@@ -521,3 +521,6 @@ class DesktopWindow {
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.analytics, 'label': 'Predictive', 'widget': const PredictiveAnalyticsCenter(), 'color': Colors.deepPurple},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.verified, 'label': 'Quality', 'widget': const QualityAssuranceCenter(), 'color': Colors.teal},
