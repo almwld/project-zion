@@ -1363,3 +1363,6 @@ IconButton(
             left: 10,
             child: const AdvancedPerformanceAnalyzer(),
           ),
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.psychology, 'label': 'AI Control', 'widget': const AIControlCenter(), 'color': Colors.cyan},
