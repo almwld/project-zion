@@ -26,18 +26,24 @@ import '../security_center/security_center.dart';
 import '../tasks/advanced_task_manager.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
+import '../maintenance/maintenance_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
+import '../maintenance/maintenance_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
+import '../maintenance/maintenance_center.dart';
 import '../security_center/security_center.dart';
 import '../tasks/advanced_task_manager.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
+import '../maintenance/maintenance_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
+import '../maintenance/maintenance_center.dart';
 import '../downloads/download_manager.dart';
 import '../network_control/network_control_center.dart';
+import '../maintenance/maintenance_center.dart';
 import '../notifications/advanced_notification_center.dart';
 import '../../../cosmic_terminal.dart';
 
@@ -582,3 +588,6 @@ IconButton(
 
 // إضافة في قائمة icons في _buildDesktopIcons
 {'icon': Icons.router, 'label': 'Network Ctrl', 'widget': const NetworkControlCenter(), 'color': Colors.cyan},
+
+// إضافة في قائمة icons في _buildDesktopIcons
+{'icon': Icons.build, 'label': 'Maintenance', 'widget': const MaintenanceCenter(), 'color': Colors.purple},
