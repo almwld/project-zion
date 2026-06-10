@@ -271,7 +271,7 @@ class _AdvancedSettingsState extends State<AdvancedSettings> {
             subtitle: const Text('Hide app activities and notifications'),
             value: _stealthMode,
             onChanged: (v) => _saveSetting('stealth_mode', v),
-            secondary: const Icon(Icons.invisibility),
+            secondary: const Icon(Icons.visibility_off),
           ),
           SwitchListTile(
             title: const Text('Clear History'),
@@ -292,7 +292,7 @@ class _AdvancedSettingsState extends State<AdvancedSettings> {
             subtitle: const Text('Encrypt stored data'),
             value: _encryptData,
             onChanged: (v) => _saveSetting('encrypt_data', v),
-            secondary: const Icon(Icons.encryption),
+            secondary: const Icon(Icons.lock),
           ),
         ],
       ),
