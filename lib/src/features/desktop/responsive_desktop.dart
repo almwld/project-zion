@@ -1361,5 +1361,5 @@ IconButton(
           Positioned(
             top: 10,
             left: 10,
-            child: const PerformanceAnalyzer(),
+            child: const AdvancedPerformanceAnalyzer(),
           ),
