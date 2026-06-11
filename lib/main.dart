@@ -1,51 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
-// استيراد الملفات (جميعها موجودة في مساراتها الصحيحة)
-import 'src/features/splash/splash_screen.dart';
-import 'src/features/onboarding/onboarding_screen.dart';
-import 'src/features/lock/lock_screen.dart';
-import 'src/features/desktop/responsive_desktop.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
-  
-  final prefs = await SharedPreferences.getInstance();
-  final isFirstLaunch = prefs.getBool('first_launch') ?? true;
-  
-  if (isFirstLaunch) {
-    await prefs.setBool('first_launch', false);
-  }
-  
-  runApp(ZionOS(isFirstLaunch: isFirstLaunch));
+void main() {
+  // تأخير بسيط لتجنب مشاكل LG
+  runZonedGuarded(() {
+    runApp(const ZionOS());
+  }, (error, stack) {
+    print('Error: $error');
+  });
 }
 
 class ZionOS extends StatelessWidget {
-  final bool isFirstLaunch;
-  const ZionOS({super.key, required this.isFirstLaunch});
+  const ZionOS({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zion OS v3.3',
+      title: 'Zion OS',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black,
-        primaryColor: Colors.green,
+      theme: ThemeData.dark(),
+      home: const ZionHomePage(),
+    );
+  }
+}
+
+class ZionHomePage extends StatefulWidget {
+  const ZionHomePage({super.key});
+
+  @override
+  State<ZionHomePage> createState() => _ZionHomePageState();
+}
+
+class _ZionHomePageState extends State<ZionHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // تأخير إضافي لـ LG
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.security, color: Colors.green, size: 80),
+            const SizedBox(height: 20),
+            const Text(
+              'ZION OS',
+              style: TextStyle(color: Colors.green, fontSize: 32, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Loading for LG device...',
+              style: TextStyle(color: Colors.white70),
+            ),
+            const SizedBox(height: 20),
+            const CircularProgressIndicator(color: Colors.green),
+          ],
+        ),
       ),
-      initialRoute: isFirstLaunch ? '/onboarding' : '/lock',
-      routes: {
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/lock': (context) => const LockScreen(),
-        '/home': (context) => const ResponsiveDesktop(),
-      },
     );
   }
 }
