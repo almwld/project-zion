@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class GalleryApp extends StatefulWidget {
@@ -12,106 +11,21 @@ class GalleryApp extends StatefulWidget {
 
 class _GalleryAppState extends State<GalleryApp> {
   final List<Map<String, dynamic>> _photos = [];
-  final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
-  int _selectedCategory = 0;
-  final List<String> _categories = ['All', 'Camera', 'Screenshots', 'Downloads'];
 
   @override
   void initState() {
     super.initState();
-    _loadSavedPhotos();
+    _loadDemoPhotos();
   }
 
-  Future<void> _loadSavedPhotos() async {
-    setState(() => _isLoading = true);
-    if (_photos.isEmpty) {
-      _photos.addAll([
-        {'name': 'IMG_20241201.jpg', 'size': '2.5 MB', 'date': '2024-12-01', 'path': '', 'type': 'image'},
-        {'name': 'Screenshot_20241201.png', 'size': '0.8 MB', 'date': '2024-12-01', 'path': '', 'type': 'screenshot'},
-      ]);
-    }
-    setState(() => _isLoading = false);
-  }
-
-  Future<void> _takePhoto() async {
-    try {
-      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-      if (photo != null) {
-        final file = File(photo.path);
-        final stat = await file.stat();
-        setState(() {
-          _photos.insert(0, {
-            'name': photo.name,
-            'size': _formatSize(stat.size),
-            'date': DateTime.now().toIso8601String().substring(0, 10),
-            'path': photo.path,
-            'type': 'camera',
-          });
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Photo captured'), backgroundColor: Color(0xFF00BCD4)),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Camera not available'), backgroundColor: Colors.red),
-      );
-    }
-  }
-
-  Future<void> _pickImage() async {
-    try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        final file = File(image.path);
-        final stat = await file.stat();
-        setState(() {
-          _photos.insert(0, {
-            'name': image.name,
-            'size': _formatSize(stat.size),
-            'date': DateTime.now().toIso8601String().substring(0, 10),
-            'path': image.path,
-            'type': 'gallery',
-          });
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Image added'), backgroundColor: Color(0xFF00BCD4)),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to pick image'), backgroundColor: Colors.red),
-      );
-    }
-  }
-
-  void _deletePhoto(int index) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Photo', style: TextStyle(color: Color(0xFF00BCD4))),
-        content: const Text('Are you sure?', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black,
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: Colors.white54))),
-          TextButton(
-            onPressed: () async {
-              final photo = _photos[index];
-              if (photo['path'] != null && photo['path'].isNotEmpty) {
-                try { await File(photo['path']).delete(); } catch (_) {}
-              }
-              setState(() => _photos.removeAt(index));
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Photo deleted'), backgroundColor: Color(0xFF00BCD4)),
-              );
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
+  void _loadDemoPhotos() {
+    _photos.addAll([
+      {'name': 'IMG_20241201.jpg', 'size': '2.5 MB', 'date': '2024-12-01', 'type': 'image'},
+      {'name': 'Screenshot_20241201.png', 'size': '0.8 MB', 'date': '2024-12-01', 'type': 'screenshot'},
+      {'name': 'IMG_20241130.jpg', 'size': '1.8 MB', 'date': '2024-11-30', 'type': 'image'},
+      {'name': 'IMG_20241129.jpg', 'size': '3.2 MB', 'date': '2024-11-29', 'type': 'image'},
+    ]);
   }
 
   void _viewPhoto(Map<String, dynamic> photo) {
@@ -127,11 +41,7 @@ class _GalleryAppState extends State<GalleryApp> {
               Container(
                 height: 300,
                 decoration: BoxDecoration(color: const Color(0xFF00BCD4).withOpacity(0.1), borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                child: Center(
-                  child: photo['path'].isNotEmpty
-                      ? Image.file(File(photo['path']), fit: BoxFit.contain)
-                      : const Icon(Icons.image, size: 80, color: Color(0xFF00BCD4)),
-                ),
+                child: const Center(child: Icon(Icons.image, size: 80, color: Color(0xFF00BCD4))),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -141,29 +51,10 @@ class _GalleryAppState extends State<GalleryApp> {
                     const SizedBox(height: 4),
                     Text('Size: ${photo['size']} • Date: ${photo['date']}', style: const TextStyle(color: Colors.white54, fontSize: 12)),
                     const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.close),
-                          label: const Text('Close'),
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00BCD4), foregroundColor: Colors.black),
-                        ),
-                        const SizedBox(width: 10),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            Clipboard.setData(ClipboardData(text: photo['name']));
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Name copied'), backgroundColor: Color(0xFF00BCD4)),
-                            );
-                          },
-                          icon: const Icon(Icons.copy),
-                          label: const Text('Copy Name'),
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[800]),
-                        ),
-                      ],
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00BCD4), foregroundColor: Colors.black),
+                      child: const Text('Close'),
                     ),
                   ],
                 ),
@@ -175,49 +66,37 @@ class _GalleryAppState extends State<GalleryApp> {
     );
   }
 
-  String _formatSize(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
-  }
-
   @override
   Widget build(BuildContext context) {
-    final filteredPhotos = _selectedCategory == 0 ? _photos : _photos.where((p) => p['type'] == _categories[_selectedCategory].toLowerCase()).toList();
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Gallery', style: TextStyle(color: Color(0xFF00BCD4))),
         backgroundColor: Colors.black,
-        leading: IconButton(icon: const Icon(Icons.arrow_back, color: Color(0xFF00BCD4)), onPressed: () => Navigator.pop(context)),
-        actions: [
-          IconButton(icon: const Icon(Icons.camera_alt, color: Color(0xFF00BCD4)), onPressed: _takePhoto),
-          IconButton(icon: const Icon(Icons.photo_library, color: Color(0xFF00BCD4)), onPressed: _pickImage),
-        ],
-        bottom: TabBar(onTap: (i) => setState(() => _selectedCategory = i), labelColor: const Color(0xFF00BCD4), unselectedLabelColor: Colors.white54, indicatorColor: const Color(0xFF00BCD4), tabs: _categories.map((cat) => Tab(text: cat)).toList()),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF00BCD4)),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: Color(0xFF00BCD4)))
-          : filteredPhotos.isEmpty
+          : _photos.isEmpty
               ? const Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.photo_library, size: 64, color: Colors.white24), SizedBox(height: 16), Text('No photos', style: TextStyle(color: Colors.white38))]))
               : GridView.builder(
                   padding: const EdgeInsets.all(16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 1, crossAxisSpacing: 8, mainAxisSpacing: 8),
-                  itemCount: filteredPhotos.length,
+                  itemCount: _photos.length,
                   itemBuilder: (ctx, i) {
-                    final photo = filteredPhotos[i];
+                    final photo = _photos[i];
                     return GestureDetector(
                       onTap: () => _viewPhoto(photo),
-                      onLongPress: () => _deletePhoto(_photos.indexOf(photo)),
                       child: Container(
                         decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF00BCD4), Color(0xFF006064)]), borderRadius: BorderRadius.circular(12)),
-                        child: Stack(
-                          children: [
-                            Center(child: photo['path'].isNotEmpty ? ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.file(File(photo['path']), fit: BoxFit.cover, width: double.infinity, height: double.infinity)) : const Icon(Icons.image, color: Colors.white, size: 40)),
-                            Positioned(bottom: 4, right: 4, child: Container(padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2), decoration: BoxDecoration(color: Colors.black.withOpacity(0.6), borderRadius: BorderRadius.circular(4)), child: Text(photo['name'].split('.').last.toUpperCase(), style: const TextStyle(color: Colors.white70, fontSize: 8)))),
-                          ],
-                        ),
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                          const Icon(Icons.image, color: Colors.white, size: 40),
+                          const SizedBox(height: 8),
+                          Text(photo['name'], style: const TextStyle(color: Colors.white70, fontSize: 10), maxLines: 1, overflow: TextOverflow.ellipsis),
+                        ]),
                       ),
                     );
                   },

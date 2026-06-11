@@ -52,6 +52,7 @@ import 'apps/network_hub.dart';
 import 'apps/privacy_hub.dart';
 import 'apps/automation_hub.dart';
 import 'apps/root_terminal/root_terminal.dart';
+import 'apps/root_terminal/root_terminal.dart';
 
 class ZionDesktop extends StatefulWidget {
   const ZionDesktop({super.key});
@@ -87,6 +88,7 @@ class _ZionDesktopState extends State<ZionDesktop> with SingleTickerProviderStat
     {"name": "NET HUB", "icon": Icons.network_check, "category": "tools".tr(), "screen": const NetworkHubApp()},
     {"name": "PRIV HUB", "icon": Icons.privacy_tip, "category": "tools".tr(), "screen": const PrivacyHubApp()},
     {"name": "AUTO HUB", "icon": Icons.settings, "category": "tools".tr(), "screen": const AutomationHubApp()},
+    {"name": "ROOT TERM", "icon": Icons.terminal, "category": "TOOLS", "screen": const RootTerminalApp()},
     {"name": "ROOT TERM", "icon": Icons.terminal, "category": "TOOLS", "screen": const RootTerminalApp()},
     {"name": "NOTES", "icon": Icons.note, "category": "tools".tr(), "screen": const NotesApp()},
     {"name": "WEATHER", "icon": Icons.wb_sunny, "category": "tools".tr(), "screen": const WeatherApp()},
