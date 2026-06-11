@@ -6,14 +6,19 @@ import 'src/features/onboarding/onboarding_screen.dart';
 import 'src/features/lock/lock_screen.dart';
 import 'src/features/desktop/responsive_desktop.dart';
 
-// استيراد التطبيقات
-import 'src/features/terminal/cosmic_terminal.dart';
+// استيراد التطبيقات (بالمسارات الصحيحة من الشجرة)
+import 'cosmic_terminal.dart';
 import 'src/features/wifi/zion_wifi_panel.dart';
 import 'src/features/si/advanced_si_control_panel.dart';
 import 'src/features/windows/advanced_file_explorer.dart';
 import 'src/features/windows/advanced_web_browser.dart';
 import 'src/features/windows/advanced_text_editor.dart';
 import 'src/features/settings/main_settings.dart';
+import 'src/features/network/network_analyzer.dart';
+import 'src/features/system/process_manager.dart';
+import 'src/features/system/system_monitor.dart';
+import 'src/features/security/vulnerability_scanner.dart';
+import 'src/features/security_center/security_center.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +63,7 @@ class ZionOS extends StatelessWidget {
         '/lock': (context) => const LockScreen(),
         '/home': (context) => const ResponsiveDesktop(),
         
-        // التطبيقات الأساسية
+        // التطبيقات (بالمسارات الصحيحة)
         '/terminal': (context) => const CosmicTerminal(),
         '/wifi': (context) => const ZionWifiPanel(),
         '/si_agent': (context) => const AdvancedSIControlPanel(),
@@ -66,6 +71,11 @@ class ZionOS extends StatelessWidget {
         '/browser': (context) => const AdvancedWebBrowser(),
         '/text_editor': (context) => const AdvancedTextEditor(),
         '/settings': (context) => const MainSettings(),
+        '/network': (context) => const NetworkAnalyzer(),
+        '/processes': (context) => const ProcessManager(),
+        '/monitor': (context) => const SystemMonitor(),
+        '/scanner': (context) => const VulnerabilityScanner(),
+        '/security': (context) => const SecurityCenter(),
       },
     );
   }
