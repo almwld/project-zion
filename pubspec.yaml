@@ -79,3 +79,5 @@ flutter_launcher_icons:
 
   mobile_scanner: ^4.0.1
   qr_flutter: ^4.1.0
+
+  video_player: ^2.8.1
