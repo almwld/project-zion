@@ -41,7 +41,7 @@ class _WiFiScannerAppState extends State<WiFiScannerApp> {
     });
 
     try {
-      // Method 1: Using dumpsys wifi (Android)
+      // Using dumpsys wifi (Android)
       final result = await Process.run('dumpsys', ['wifi'], runInShell: true);
       final output = result.stdout.toString();
       
@@ -54,7 +54,7 @@ class _WiFiScannerAppState extends State<WiFiScannerApp> {
         final ssid = match.group(1);
         final bssid = match.group(2);
         final rssi = match.group(3);
-        if (ssid != null && ssid.isNotEmpty && ssid != 'unknown') {
+        if (ssid != null && ssid.isNotEmpty && ssid != 'unknown' && ssid != '<unknown ssid>') {
           networksList.add({
             'ssid': ssid,
             'bssid': bssid ?? 'Unknown',
@@ -64,45 +64,18 @@ class _WiFiScannerAppState extends State<WiFiScannerApp> {
         }
       }
       
-      // Method 2: Using iwlist if available (alternative)
       if (networksList.isEmpty) {
-        try {
-          final iwResult = await Process.run('iwlist', ['wlan0', 'scan'], runInShell: true);
-          final iwOutput = iwResult.stdout.toString();
-          final iwRegex = RegExp(r'ESSID:"([^"]+)".*?Quality=(\d+)/\d+.*?Address: ([0-9a-f:]+)', caseSensitive: false);
-          final iwMatches = iwRegex.allMatches(iwOutput);
-          for (final match in iwMatches) {
-            networksList.add({
-              'ssid': match.group(1) ?? 'Unknown',
-              'bssid': match.group(3) ?? 'Unknown',
-              'signal': match.group(2) ?? '0',
-              'security': 'WPA2',
-            });
-          }
-        } catch (_) {}
-      }
-      
-      // Method 3: Simulated data for testing (when no real networks found)
-      if (networksList.isEmpty) {
-        networksList.addAll([
-          {'ssid': 'Zion_Secure', 'bssid': '00:11:22:33:44:55', 'signal': '-45', 'security': 'WPA3'},
-          {'ssid': 'Public_WiFi', 'bssid': 'AA:BB:CC:DD:EE:FF', 'signal': '-67', 'security': 'Open'},
-          {'ssid': 'Home_Network', 'bssid': '11:22:33:44:55:66', 'signal': '-52', 'security': 'WPA2'},
-          {'ssid': 'Office_5G', 'bssid': '22:33:44:55:66:77', 'signal': '-78', 'security': 'WPA2'},
-        ]);
-        _errorMessage = 'Demo mode - No real networks detected';
+        setState(() {
+          _errorMessage = 'No WiFi networks found. Make sure WiFi is enabled and location permission is granted.';
+          _isScanning = false;
+        });
+        return;
       }
       
       setState(() {
         _networks = networksList;
         _isScanning = false;
       });
-
-      if (_networks.isEmpty) {
-        setState(() {
-          _errorMessage = 'No WiFi networks found. Make sure WiFi is enabled.';
-        });
-      }
     } catch (e) {
       setState(() {
         _errorMessage = 'Error scanning networks: $e';
@@ -236,7 +209,7 @@ class _WiFiScannerAppState extends State<WiFiScannerApp> {
                             SizedBox(height: 16),
                             Text('No networks found', style: TextStyle(color: Colors.white38)),
                             SizedBox(height: 8),
-                            Text('Tap SCAN to search for networks', style: TextStyle(color: Colors.white24, fontSize: 12)),
+                            Text('Make sure WiFi is enabled', style: TextStyle(color: Colors.white24, fontSize: 12)),
                           ],
                         ),
                       )
