@@ -155,6 +155,7 @@ class _SettingsAppState extends State<SettingsApp> {
       ),
       body: ListView(
         children: [
+          // Appearance Section
           _buildSectionHeader(Icons.palette, 'Appearance'),
           _buildThemeSelector(),
           _buildLanguageSelector(),
@@ -163,6 +164,7 @@ class _SettingsAppState extends State<SettingsApp> {
             setState(() { _darkMode = v; _saveSetting('dark_mode', v); });
           }),
           
+          // Behavior Section
           _buildSectionHeader(Icons.tune, 'Behavior'),
           _buildSwitchTile('Notifications', _notifications, (v) {
             setState(() { _notifications = v; _saveSetting('notifications', v); });
@@ -180,15 +182,18 @@ class _SettingsAppState extends State<SettingsApp> {
             setState(() { _stealthMode = v; _saveSetting('stealth_mode', v); });
           }),
           
+          // Animation Speed
           _buildSliderTile('Animation Speed', _animationSpeed, 0.5, 2.0, (v) {
             setState(() { _animationSpeed = v; _saveSetting('animation_speed', v); });
           }),
           
+          // Security Section
           _buildSectionHeader(Icons.security, 'Security'),
           _buildInfoTile(Icons.lock, 'Change PIN', 'Update security PIN', _showChangePinDialog),
           _buildInfoTile(Icons.fingerprint, 'Biometric', 'Enable fingerprint unlock', () {}),
           _buildInfoTile(Icons.security, 'Encryption', 'AES-256 Active', () {}),
           
+          // About Section
           _buildSectionHeader(Icons.info, 'About'),
           _buildInfoTile(Icons.info, 'Version', 'Zion OS 4.0.0', () {}),
           _buildInfoTile(Icons.build, 'Build', '2027.06.11', () {}),
