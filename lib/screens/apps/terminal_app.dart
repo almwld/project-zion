@@ -16,6 +16,7 @@ class _TerminalAppState extends State<TerminalApp> {
   String _currentDir = '/data/data/com.termux/files/home';
   String _userName = 'zion';
   String _hostName = 'zion-os';
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -62,22 +63,20 @@ class _TerminalAppState extends State<TerminalApp> {
     _scrollToBottom();
   }
 
-  String _getPrompt() {
-    return "┌─[$_userName@$_hostName]─[$_currentDir]\n└─\\$ ";
-  }
-
   void _executeCommand() async {
     final command = _commandController.text.trim();
     if (command.isEmpty) return;
 
-    _addOutput('${_getPrompt()}$command');
+    _addOutput('$_userName@$_hostName:$_currentDir$ command');
     _commandController.clear();
     setState(() => _isProcessing = true);
 
     if (command == 'clear' || command == 'cls') {
-      setState(() => _output.clear());
+      setState(() {
+        _output.clear();
+        _isProcessing = false;
+      });
       _addWelcomeMessage();
-      setState(() => _isProcessing = false);
       return;
     }
 
@@ -105,10 +104,10 @@ class _TerminalAppState extends State<TerminalApp> {
         _addOutput(result.stdout.toString().trim());
       }
       if (result.stderr.toString().isNotEmpty) {
-        _addOutput(result.stderr.toString().trim());
+        _addOutput('[ERROR] ${result.stderr.toString().trim()}');
       }
     } catch (e) {
-      _addOutput('Command not found: $command');
+      _addOutput('[ERROR] Command not found: $command');
     }
 
     setState(() => _isProcessing = false);
@@ -132,7 +131,7 @@ class _TerminalAppState extends State<TerminalApp> {
 
   void _showHelp() {
     _addOutput('═══════════════════════════════════════════════════════════════');
-    _addOutput('📖 ZION OS TERMINAL HELP');
+    _addOutput('ZION OS TERMINAL HELP');
     _addOutput('═══════════════════════════════════════════════════════════════');
     _addOutput('  help      - Show this help');
     _addOutput('  clear     - Clear screen');
@@ -152,8 +151,6 @@ class _TerminalAppState extends State<TerminalApp> {
       }
     });
   }
-
-  bool _isProcessing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +181,10 @@ class _TerminalAppState extends State<TerminalApp> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                Text(
+                  '$_userName@$_hostName',
+                  style: const TextStyle(color: Color(0xFF00BCD4), fontSize: 10, fontFamily: 'monospace'),
+                ),
               ],
             ),
           ),
@@ -197,13 +198,14 @@ class _TerminalAppState extends State<TerminalApp> {
                 itemCount: _output.length,
                 itemBuilder: (context, index) {
                   final line = _output[index];
-                  final isCommand = line.startsWith('┌─');
+                  final isError = line.startsWith('[ERROR]');
+                  final isWelcome = line.startsWith('╔') || line.startsWith('║') || line.startsWith('╚');
                   return Container(
                     padding: const EdgeInsets.symmetric(vertical: 2),
                     child: SelectableText(
                       line,
                       style: TextStyle(
-                        color: isCommand ? const Color(0xFF00BCD4) : Colors.white70,
+                        color: isError ? Colors.red : (isWelcome ? const Color(0xFF00BCD4) : Colors.white70),
                         fontFamily: 'monospace',
                         fontSize: 13,
                       ),
@@ -225,8 +227,8 @@ class _TerminalAppState extends State<TerminalApp> {
             child: Row(
               children: [
                 Text(
-                  _getPrompt().split('\n').last,
-                  style: const TextStyle(color: Color(0xFF00BCD4), fontSize: 14, fontFamily: 'monospace'),
+                  '>',
+                  style: const TextStyle(color: Color(0xFF00BCD4), fontSize: 16, fontFamily: 'monospace'),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
