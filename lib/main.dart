@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:flutter/services.dart';
+import 'src/features/splash/splash_screen.dart';
+import 'src/features/onboarding/onboarding_screen.dart';
+import 'src/features/lock/lock_screen.dart';
+import 'src/features/desktop/glass_desktop_optimized.dart';
 
-void main() {
-  // تأخير بسيط لتجنب مشاكل LG
-  runZonedGuarded(() {
-    runApp(const ZionOS());
-  }, (error, stack) {
-    print('Error: $error');
-  });
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+  
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+  ));
+  
+  runApp(const ZionOS());
 }
 
 class ZionOS extends StatelessWidget {
@@ -16,57 +28,19 @@ class ZionOS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zion OS',
+      title: 'Zion OS v3.2',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
-      home: const ZionHomePage(),
-    );
-  }
-}
-
-class ZionHomePage extends StatefulWidget {
-  const ZionHomePage({super.key});
-
-  @override
-  State<ZionHomePage> createState() => _ZionHomePageState();
-}
-
-class _ZionHomePageState extends State<ZionHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    // تأخير إضافي لـ LG
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.security, color: Colors.green, size: 80),
-            const SizedBox(height: 20),
-            const Text(
-              'ZION OS',
-              style: TextStyle(color: Colors.green, fontSize: 32, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Loading for LG device...',
-              style: TextStyle(color: Colors.white70),
-            ),
-            const SizedBox(height: 20),
-            const CircularProgressIndicator(color: Colors.green),
-          ],
-        ),
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: Colors.black,
+        primaryColor: Colors.green,
       ),
+      initialRoute: '/splash',
+      routes: {
+        '/splash': (context) => const SplashScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
+        '/lock': (context) => const LockScreen(),
+        '/home': (context) => const GlassDesktopOptimized(),
+      },
     );
   }
 }
