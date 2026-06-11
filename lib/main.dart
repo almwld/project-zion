@@ -1,23 +1,51 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'src/core/theme/theme_manager.dart';
+import 'src/features/splash/splash_screen.dart';
+import 'src/features/onboarding/onboarding_screen.dart';
+import 'src/features/lock/lock_screen.dart';
+import 'src/features/desktop/responsive_desktop.dart';
 
-void main() {
-  runApp(const ZionOSApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+  
+  final themeManager = ThemeManager();
+  await themeManager.loadSettings();
+  
+  final prefs = await SharedPreferences.getInstance();
+  final isFirstLaunch = prefs.getBool('first_launch') ?? true;
+  
+  if (isFirstLaunch) {
+    await prefs.setBool('first_launch', false);
+  }
+  
+  runApp(ZionOS(isFirstLaunch: isFirstLaunch, themeManager: themeManager));
 }
 
-class ZionOSApp extends StatelessWidget {
-  const ZionOSApp({super.key});
+class ZionOS extends StatelessWidget {
+  final bool isFirstLaunch;
+  final ThemeManager themeManager;
+  const ZionOS({super.key, required this.isFirstLaunch, required this.themeManager});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zion OS v4.0',
+      title: 'Zion OS v3.3',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black,
-        primaryColor: const Color(0xFF00FF41),
-      ),
-      home: const SplashScreen(),
+      theme: themeManager.getTheme(),
+      initialRoute: isFirstLaunch ? '/onboarding' : '/lock',
+      routes: {
+        '/onboarding': (context) => const OnboardingScreen(),
+        '/lock': (context) => const LockScreen(),
+        '/home': (context) => const ResponsiveDesktop(),
+      },
     );
   }
 }
