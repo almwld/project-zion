@@ -1,0 +1,5 @@
+[33mbfe8bd9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/stable[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mstable[m[33m)[m 💎 Zion OS v3.3: Responsive Desktop - Perfect scaling for VM/Desktop view, adaptive UI for all screen sizes
+[33maaf0858[m 🐛 Fix: Add missing splash_screen.dart, fix import order in main.dart
+[33m3a5ff4e[m 🐛 Fix: Timer imports, utf8 decoder, LinearProgressIndicator height, Icons.package error
+[33m762f71a[m 🎯 Advanced: Live camera background, Real-time metrics dashboard (CPU, AI, Attacks, Vulnerabilities)
+[33m23b0d66[m ⚡ Performance: Add Splash Screen, Optimize window dragging, Improve memory management, Faster startup
