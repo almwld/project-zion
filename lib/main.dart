@@ -5,6 +5,7 @@ import 'core/services/notification_service.dart';
 import 'core/services/backup_service.dart';
 import 'core/services/power_service.dart';
 import 'core/services/network_service.dart';
+import 'core/services/logging_service.dart';
 import 'screens/lock_screen.dart';
 
 void main() async {
@@ -13,15 +14,18 @@ void main() async {
   final backupService = BackupService();
   final powerService = PowerService();
   final networkService = NetworkService();
+  final loggingService = LoggingService();
   notificationService.init();
   await backupService.init();
   await powerService.init();
   await networkService.init();
+  await loggingService.init();
   runApp(ZionOSApp(
     notificationService: notificationService,
     backupService: backupService,
     powerService: powerService,
     networkService: networkService,
+    loggingService: loggingService,
   ));
 }
 
@@ -30,6 +34,7 @@ class ZionOSApp extends StatelessWidget {
   final BackupService backupService;
   final PowerService powerService;
   final NetworkService networkService;
+  final LoggingService loggingService;
   
   const ZionOSApp({
     super.key,
@@ -37,6 +42,7 @@ class ZionOSApp extends StatelessWidget {
     required this.backupService,
     required this.powerService,
     required this.networkService,
+    required this.loggingService,
   });
 
   @override
@@ -48,6 +54,7 @@ class ZionOSApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: networkService),
         ChangeNotifierProvider(create: (_) => ThemeManager()),
         Provider.value(value: backupService),
+        Provider.value(value: loggingService),
       ],
       child: Consumer<ThemeManager>(
         builder: (context, themeManager, child) {
