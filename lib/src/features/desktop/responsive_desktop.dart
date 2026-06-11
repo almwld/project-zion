@@ -1,25 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import '../../core/navigation/navigation_service.dart';
 import '../../core/utils/responsive_helper.dart';
 import '../settings/main_settings.dart';
 import '../wifi/zion_wifi_panel.dart';
-import '../si/si_control_panel.dart';
-import '../windows/zion_file_manager.dart';
-import '../windows/zion_browser.dart';
-import '../windows/zion_text_editor.dart';
+import '../si/advanced_si_control_panel.dart';
+import '../windows/advanced_file_explorer.dart';
+import '../windows/advanced_web_browser.dart';
+import '../windows/advanced_text_editor.dart';
 import '../network/network_analyzer.dart';
+import '../network_infra/network_infrastructure_center.dart';
+import '../network_control/network_control_center.dart';
 import '../system/process_manager.dart';
 import '../system/system_monitor.dart';
+import '../resources/resources_center.dart';
+import '../performance/performance_monitor.dart';
 import '../security/vulnerability_scanner.dart';
-import '../reports/report_generator.dart';
-import '../packages/package_manager.dart';
-import '../logs/log_viewer.dart';
+import '../security_center/security_center.dart';
+import '../encryption/encryption_center.dart';
 import '../scheduler/task_scheduler.dart';
-import '../storage/disk_usage_analyzer.dart';
+import '../packages/package_manager.dart';
 import '../backup/backup_manager.dart';
-import '../exploits/exploit_database.dart';
-import '../payloads/payload_generator.dart';
+import '../logs/log_viewer.dart';
+import '../storage/disk_usage_analyzer.dart';
+import '../reports/report_generator.dart';
+import '../analytics/analytics_center.dart';
+import '../business/business_analytics.dart';
+import '../predictive_analytics/predictive_analytics_center.dart';
+import '../cloud/cloud_center.dart';
+import '../blockchain/blockchain_center.dart';
+import '../integration/integration_center.dart';
+import '../ai_control/ai_control_center.dart';
+import '../predictive/predictive_center.dart';
+import '../container/container_manager.dart';
+import '../robotics/robotics_center.dart';
+import '../energy/energy_center.dart';
+import '../smart_city/smart_city_center.dart';
+import '../geospatial/geospatial_center.dart';
+import '../productivity/productivity_center.dart';
+import '../developer/developer_center.dart';
+import '../learning/learning_center.dart';
+import '../docs/docs_center.dart';
+import '../help/help_center.dart';
+import '../info/info_center.dart';
+import '../games/games_center.dart';
+import '../media/media_center.dart';
+import '../ar/ar_center.dart';
 import '../qr/qr_scanner.dart';
+import '../boot/boot_center.dart';
+import '../power/power_management.dart';
+import '../cleaner/system_cleaner.dart';
+import '../maintenance/maintenance_center.dart';
+import '../quality/quality_assurance.dart';
+import '../governance/governance_center.dart';
+import '../notifications/advanced_notification_center.dart';
+import '../communication/communication_center.dart';
+import '../store/app_store.dart';
+import '../simulation/simulation_center.dart';
+import '../automation/automation_center.dart';
+// REMOVED import
 import '../../../cosmic_terminal.dart';
 
 class ResponsiveDesktop extends StatefulWidget {
@@ -46,23 +85,14 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
     });
   }
 
-  void _openWindow(String title, Widget content, {Size? size}) {
-    final screenSize = MediaQuery.of(context).size;
-    final defaultSize = Size(
-      ResponsiveHelper.getWindowWidth(context, 850),
-      ResponsiveHelper.getWindowHeight(context, 650),
-    );
-    
+  void _openWindow(String title, Widget content, {Size size = const Size(850, 650)}) {
     setState(() {
       _windows.add(DesktopWindow(
         id: _nextWindowId++,
         title: title,
         content: content,
-        position: Offset(
-          50 + (_windows.length % 5) * 30,
-          50 + (_windows.length % 5) * 30,
-        ),
-        size: size ?? defaultSize,
+        position: Offset(50 + (_windows.length % 5) * 30, 50 + (_windows.length % 5) * 30),
+        size: size,
         isMinimized: false,
         isMaximized: false,
       ));
@@ -95,10 +125,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
         if (_windows[index].isMaximized) {
           _windows[index].savedSize = _windows[index].size;
           _windows[index].savedPosition = _windows[index].position;
-          _windows[index].size = Size(
-            MediaQuery.of(context).size.width - 40,
-            MediaQuery.of(context).size.height - 100,
-          );
+          _windows[index].size = const Size(double.infinity, double.infinity);
           _windows[index].position = Offset.zero;
         } else {
           _windows[index].size = _windows[index].savedSize;
@@ -150,20 +177,19 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = ResponsiveHelper.isMobile(context) ? 40.0 : 48.0;
+    final fontSize = ResponsiveHelper.isMobile(context) ? 10.0 : 12.0;
+    
     return Scaffold(
       backgroundColor: Colors.black,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            children: [
-              _buildBackground(),
-              _buildDesktopIcons(),
-              ..._windows.where((w) => !w.isMinimized).map((w) => _buildWindow(w)),
-              if (_menuOpen) _buildStartMenu(),
-              _buildTaskbar(),
-            ],
-          );
-        },
+      body: Stack(
+        children: [
+          _buildBackground(),
+          _buildDesktopIcons(iconSize),
+          ..._windows.where((w) => !w.isMinimized).map((w) => _buildWindow(w)),
+          if (_menuOpen) _buildStartMenu(),
+          _buildTaskbar(iconSize, fontSize),
+        ],
       ),
     );
   }
@@ -177,57 +203,167 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
           colors: [Color(0xFF00FF41), Colors.black],
         ),
       ),
-      child: Center(
+      child: const Center(
         child: Text(
           'ZION OS\nv3.3',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: ResponsiveHelper.getFontSize(context, 48),
-            fontWeight: FontWeight.bold,
-            shadows: const [Shadow(color: Color(0xFF00FF41), blurRadius: 10)],
+          style: TextStyle(color: Colors.white, fontSize: 48, fontWeight: FontWeight.bold, shadows: [
+            Shadow(color: Color(0xFF00FF41), blurRadius: 10),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopIcons(double iconSize) {
+    final icons = [
+      {'icon': Icons.terminal, 'label': 'Terminal', 'route': AppRoutes.terminal, 'color': Colors.green},
+      {'icon': Icons.wifi, 'label': 'WiFi', 'route': AppRoutes.wifi, 'color': Colors.blue},
+      {'icon': Icons.psychology, 'label': 'SI Agent', 'route': AppRoutes.siAgent, 'color': Colors.purple},
+      {'icon': Icons.folder, 'label': 'Files', 'route': AppRoutes.fileManager, 'color': Colors.orange},
+      {'icon': Icons.public, 'label': 'Browser', 'route': AppRoutes.browser, 'color': Colors.teal},
+      {'icon': Icons.edit, 'label': 'Editor', 'route': AppRoutes.textEditor, 'color': Colors.pink},
+      {'icon': Icons.settings, 'label': 'Settings', 'route': AppRoutes.settings, 'color': Colors.grey},
+      {'icon': Icons.network_check, 'label': 'Network', 'route': AppRoutes.networkAnalyzer, 'color': Colors.cyan},
+      {'icon': Icons.device_hub, 'label': 'Infra', 'route': AppRoutes.networkInfra, 'color': Colors.blueGrey},
+      {'icon': Icons.router, 'label': 'Net Ctrl', 'route': AppRoutes.networkControl, 'color': Colors.lightBlue},
+      {'icon': Icons.memory, 'label': 'Processes', 'route': AppRoutes.processManager, 'color': Colors.orange},
+      {'icon': Icons.speed, 'label': 'Monitor', 'route': AppRoutes.systemMonitor, 'color': Colors.purple},
+      {'icon': Icons.bug_report, 'label': 'Scanner', 'route': AppRoutes.vulnerabilityScanner, 'color': Colors.red},
+      {'icon': Icons.security, 'label': 'Security', 'route': AppRoutes.securityCenter, 'color': Colors.red},
+      {'icon': Icons.lock, 'label': 'Encryption', 'route': AppRoutes.encryptionCenter, 'color': Colors.teal},
+      {'icon': Icons.visibility_off, 'label': 'Stealth', 'route': AppRoutes.stealthMode, 'color': Colors.purple},
+      {'icon': Icons.schedule, 'label': 'Scheduler', 'route': AppRoutes.taskScheduler, 'color': Colors.amber},
+      {'icon': Icons.archive, 'label': 'Packages', 'route': AppRoutes.packageManager, 'color': Colors.indigo},
+      {'icon': Icons.backup, 'label': 'Backup', 'route': AppRoutes.backupManager, 'color': Colors.purple},
+      {'icon': Icons.history, 'label': 'Logs', 'route': AppRoutes.logViewer, 'color': Colors.orange},
+      {'icon': Icons.storage, 'label': 'Disk', 'route': AppRoutes.diskAnalyzer, 'color': Colors.deepOrange},
+      {'icon': Icons.description, 'label': 'Reports', 'route': AppRoutes.reportGenerator, 'color': Colors.blue},
+      {'icon': Icons.analytics, 'label': 'Analytics', 'route': AppRoutes.analyticsCenter, 'color': Colors.indigo},
+      {'icon': Icons.bar_chart, 'label': 'Business', 'route': AppRoutes.businessAnalytics, 'color': Colors.indigo},
+      {'icon': Icons.trending_up, 'label': 'Predictive', 'route': AppRoutes.predictiveAnalytics, 'color': Colors.deepPurple},
+      {'icon': Icons.cloud, 'label': 'Cloud', 'route': AppRoutes.cloudCenter, 'color': Colors.lightBlue},
+      {'icon': Icons.currency_bitcoin, 'label': 'Blockchain', 'route': AppRoutes.blockchainCenter, 'color': Colors.amber},
+      {'icon': Icons.share, 'label': 'Integration', 'route': AppRoutes.integrationCenter, 'color': Colors.deepPurple},
+      {'icon': Icons.psychology, 'label': 'AI Control', 'route': AppRoutes.aiControl, 'color': Colors.cyan},
+      {'icon': Icons.dashboard, 'label': 'Containers', 'route': AppRoutes.containerManager, 'color': Colors.indigo},
+      {'icon': Icons.android, 'label': 'Robotics', 'route': AppRoutes.roboticsCenter, 'color': Colors.cyan},
+      {'icon': Icons.energy_savings_leaf, 'label': 'Energy', 'route': AppRoutes.energyCenter, 'color': Colors.green},
+      {'icon': Icons.location_city, 'label': 'Smart City', 'route': AppRoutes.smartCityCenter, 'color': Colors.blue},
+      {'icon': Icons.map, 'label': 'Geospatial', 'route': AppRoutes.geospatialCenter, 'color': Colors.green},
+      {'icon': Icons.work, 'label': 'Productivity', 'route': AppRoutes.productivityCenter, 'color': Colors.orange},
+      {'icon': Icons.code, 'label': 'Developer', 'route': AppRoutes.developerCenter, 'color': Colors.deepPurple},
+      {'icon': Icons.school, 'label': 'Learning', 'route': AppRoutes.learningCenter, 'color': Colors.teal},
+      {'icon': Icons.book, 'label': 'Docs', 'route': AppRoutes.docsCenter, 'color': Colors.orange},
+      {'icon': Icons.help, 'label': 'Help', 'route': AppRoutes.helpCenter, 'color': Colors.blue},
+      {'icon': Icons.info, 'label': 'Info', 'route': AppRoutes.infoCenter, 'color': Colors.blue},
+      {'icon': Icons.games, 'label': 'Games', 'route': AppRoutes.gamesCenter, 'color': Colors.amber},
+      {'icon': Icons.audiotrack, 'label': 'Media', 'route': AppRoutes.mediaCenter, 'color': Colors.pink},
+      {'icon': Icons.qr_code, 'label': 'QR', 'route': AppRoutes.qrScanner, 'color': Colors.cyan},
+      {'icon': Icons.power_settings_new, 'label': 'Boot', 'route': AppRoutes.bootCenter, 'color': Colors.deepOrange},
+      {'icon': Icons.battery_std, 'label': 'Power', 'route': AppRoutes.powerManagement, 'color': Colors.green},
+      {'icon': Icons.cleaning_services, 'label': 'Cleaner', 'route': AppRoutes.systemCleaner, 'color': Colors.blue},
+      {'icon': Icons.build, 'label': 'Maintenance', 'route': AppRoutes.maintenanceCenter, 'color': Colors.purple},
+      {'icon': Icons.verified, 'label': 'Quality', 'route': AppRoutes.qualityAssurance, 'color': Colors.teal},
+      {'icon': Icons.gavel, 'label': 'Governance', 'route': AppRoutes.governanceCenter, 'color': Colors.blue},
+      {'icon': Icons.notifications, 'label': 'Notif', 'route': AppRoutes.notificationCenter, 'color': Colors.blue},
+      {'icon': Icons.chat, 'label': 'Comms', 'route': AppRoutes.communicationCenter, 'color': Colors.green},
+      {'icon': Icons.store, 'label': 'App Store', 'route': AppRoutes.appStore, 'color': Colors.blue},
+      {'icon': Icons.science, 'label': 'Simulation', 'route': AppRoutes.simulationCenter, 'color': Colors.cyan},
+      {'icon': Icons.settings, 'label': 'Automation', 'route': AppRoutes.automationCenter, 'color': Colors.amber},
+      {'icon': Icons.architecture, 'label': 'Distros', 'route': AppRoutes.distros, 'color': Colors.deepPurple},
+      {'icon': Icons.ac_unit, 'label': 'NixOS', 'route': AppRoutes.nixos, 'color': Colors.indigo},
+    ];
+
+    return Positioned.fill(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 40),
+              Wrap(
+                spacing: 30,
+                runSpacing: 30,
+                children: icons.map((icon) => _DesktopIcon(
+                  icon: icon['icon'] as IconData,
+                  label: icon['label'] as String,
+                  color: icon['color'] as Color,
+                  iconSize: iconSize,
+                  onTap: () => _openWindow(icon['label'] as String, _getWidgetForRoute(icon['route'] as String)),
+                )).toList(),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildDesktopIcons() {
-    final icons = [
-      {'icon': Icons.terminal, 'label': 'Terminal', 'widget': const CosmicTerminal(), 'color': Colors.green},
-      {'icon': Icons.wifi, 'label': 'WiFi', 'widget': const ZionWifiPanel(), 'color': Colors.blue},
-      {'icon': Icons.psychology, 'label': 'SI Agent', 'widget': const SIControlPanel(), 'color': Colors.purple},
-      {'icon': Icons.folder, 'label': 'Files', 'widget': const ZionFileManager(), 'color': Colors.orange},
-      {'icon': Icons.public, 'label': 'Browser', 'widget': const ZionBrowser(), 'color': Colors.teal},
-      {'icon': Icons.edit, 'label': 'Editor', 'widget': const ZionTextEditor(), 'color': Colors.pink},
-      {'icon': Icons.settings, 'label': 'Settings', 'widget': const MainSettings(), 'color': Colors.grey},
-    ];
-
-    final iconSize = ResponsiveHelper.getIconSize(context);
-    final gridColumns = ResponsiveHelper.getDesktopGridColumns(context);
-
-    return Positioned.fill(
-      child: Padding(
-        padding: ResponsiveHelper.getDesktopPadding(context),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: ResponsiveHelper.getFontSize(context, 40)),
-            Wrap(
-              spacing: ResponsiveHelper.getFontSize(context, 30),
-              runSpacing: ResponsiveHelper.getFontSize(context, 30),
-              children: icons.map((icon) => _DesktopIcon(
-                icon: icon['icon'] as IconData,
-                label: icon['label'] as String,
-                color: icon['color'] as Color,
-                iconSize: iconSize,
-                onTap: () => _openWindow(icon['label'] as String, icon['widget'] as Widget),
-              )).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
+  Widget _getWidgetForRoute(String route) {
+    switch (route) {
+      case AppRoutes.terminal: return const CosmicTerminal();
+      case AppRoutes.wifi: return const ZionWifiPanel();
+      case AppRoutes.siAgent: return const AdvancedSIControlPanel();
+      case AppRoutes.fileManager: return const AdvancedFileExplorer();
+      case AppRoutes.browser: return const AdvancedWebBrowser();
+      case AppRoutes.textEditor: return const Center(child: Text('Text Editor', style: TextStyle(color: Colors.white)));
+      case AppRoutes.settings: return const MainSettings();
+      case AppRoutes.networkAnalyzer: return const NetworkAnalyzer();
+      case AppRoutes.networkInfra: return const NetworkInfrastructureCenter();
+      case AppRoutes.networkControl: return const NetworkControlCenter();
+      case AppRoutes.processManager: return const ProcessManager();
+      case AppRoutes.systemMonitor: return const SystemMonitor();
+      case AppRoutes.resourcesCenter: return const ResourcesCenter();
+      case AppRoutes.performanceMonitor: return const PerformanceMonitor();
+      case AppRoutes.vulnerabilityScanner: return const VulnerabilityScanner();
+      case AppRoutes.securityCenter: return const SecurityCenter();
+      case AppRoutes.encryptionCenter: return const EncryptionCenter();
+      case AppRoutes.stealthMode: return const Center(child: Text('Stealth Mode', style: TextStyle(color: Colors.white)));
+      case AppRoutes.taskScheduler: return const TaskScheduler();
+      case AppRoutes.packageManager: return const PackageManager();
+      case AppRoutes.backupManager: return const BackupManager();
+      case AppRoutes.logViewer: return const LogViewer();
+      case AppRoutes.diskAnalyzer: return const DiskUsageAnalyzer();
+      case AppRoutes.reportGenerator: return const ReportGenerator();
+      case AppRoutes.analyticsCenter: return const AnalyticsCenter();
+      case AppRoutes.businessAnalytics: return const BusinessAnalytics();
+      case AppRoutes.predictiveAnalytics: return const PredictiveAnalyticsCenter();
+      case AppRoutes.cloudCenter: return const CloudCenter();
+      case AppRoutes.blockchainCenter: return const BlockchainCenter();
+      case AppRoutes.integrationCenter: return const IntegrationCenter();
+      case AppRoutes.aiControl: return const AIControlCenter();
+      case AppRoutes.containerManager: return const ContainerManager();
+      case AppRoutes.roboticsCenter: return const RoboticsCenter();
+      case AppRoutes.energyCenter: return const EnergyCenter();
+      case AppRoutes.smartCityCenter: return const SmartCityCenter();
+      case AppRoutes.geospatialCenter: return const GeospatialCenter();
+      case AppRoutes.productivityCenter: return const ProductivityCenter();
+      case AppRoutes.developerCenter: return const DeveloperCenter();
+      case AppRoutes.learningCenter: return const LearningCenter();
+      case AppRoutes.docsCenter: return const DocsCenter();
+      case AppRoutes.helpCenter: return const HelpCenter();
+      case AppRoutes.infoCenter: return const InfoCenter();
+      case AppRoutes.gamesCenter: return const GamesCenter();
+      case AppRoutes.mediaCenter: return const MediaCenter();
+      case AppRoutes.arCenter: return const ARCenter();
+      case AppRoutes.qrScanner: return const QRScanner();
+      case AppRoutes.bootCenter: return const BootCenter();
+      case AppRoutes.powerManagement: return const PowerManagement();
+      case AppRoutes.systemCleaner: return const SystemCleaner();
+      case AppRoutes.maintenanceCenter: return const MaintenanceCenter();
+      case AppRoutes.qualityAssurance: return const QualityAssuranceCenter();
+      case AppRoutes.governanceCenter: return const GovernanceCenter();
+      case AppRoutes.notificationCenter: return const AdvancedNotificationCenter();
+      case AppRoutes.communicationCenter: return const CommunicationCenter();
+      case AppRoutes.appStore: return const AppStore();
+      case AppRoutes.simulationCenter: return const SimulationCenter();
+      case AppRoutes.automationCenter: return const AutomationCenter();
+      case AppRoutes.distros: return const SizedBox();
+      case AppRoutes.nixos: return const Center(child: Text('NixOS Integration', style: TextStyle(color: Colors.white)));
+      default: return const Center(child: Text('Coming Soon', style: TextStyle(color: Colors.white)));
+    }
   }
 
   Widget _buildWindow(DesktopWindow w) {
@@ -315,17 +451,6 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
   }
 
   Widget _buildStartMenu() {
-    final List<Map<String, dynamic>> menuItems = [
-      {'icon': Icons.terminal, 'title': 'Terminal', 'widget': const CosmicTerminal(), 'color': Colors.green},
-      {'icon': Icons.wifi, 'title': 'WiFi', 'widget': const ZionWifiPanel(), 'color': Colors.blue},
-      {'icon': Icons.psychology, 'title': 'SI Agent', 'widget': const SIControlPanel(), 'color': Colors.purple},
-      {'icon': Icons.folder, 'title': 'File Manager', 'widget': const ZionFileManager(), 'color': Colors.orange},
-      {'icon': Icons.public, 'title': 'Browser', 'widget': const ZionBrowser(), 'color': Colors.teal},
-      {'icon': Icons.edit, 'title': 'Editor', 'widget': const ZionTextEditor(), 'color': Colors.pink},
-      {'icon': Icons.settings, 'title': 'Settings', 'widget': const MainSettings(), 'color': Colors.grey},
-      const {'icon': Icons.exit_to_app, 'title': 'Exit', 'color': Colors.red},
-    ];
-
     return Positioned(
       bottom: 70,
       left: 16,
@@ -333,7 +458,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
         elevation: 8,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          width: ResponsiveHelper.isMobile(context) ? 250 : 280,
+          width: 280,
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.95),
             borderRadius: BorderRadius.circular(12),
@@ -362,18 +487,22 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
                   ],
                 ),
               ),
-              ...menuItems.map((item) => ListTile(
-                leading: Icon(item['icon'] as IconData, color: item['color'] as Color? ?? const Color(0xFF00FF41)),
-                title: Text(item['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 13)),
-                onTap: () {
-                  _toggleMenu();
-                  if (item['title'] == 'Exit') {
-                    Navigator.pop(context);
-                  } else {
-                    _openWindow(item['title'] as String, item['widget'] as Widget);
-                  }
-                },
-              )),
+              ListTile(
+                leading: const Icon(Icons.terminal, color: Colors.green),
+                title: const Text('Terminal', style: TextStyle(color: Colors.white)),
+                onTap: () => _openWindow('Terminal', const CosmicTerminal()),
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings, color: Colors.grey),
+                title: const Text('Settings', style: TextStyle(color: Colors.white)),
+                onTap: () => _openWindow('Settings', const MainSettings()),
+              ),
+              const Divider(color: Colors.white24),
+              ListTile(
+                leading: const Icon(Icons.exit_to_app, color: Colors.red),
+                title: const Text('Exit', style: TextStyle(color: Colors.red)),
+                onTap: () => Navigator.pop(context),
+              ),
             ],
           ),
         ),
@@ -381,7 +510,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
     );
   }
 
-  Widget _buildTaskbar() {
+  Widget _buildTaskbar(double iconSize, double fontSize) {
     return Positioned(
       bottom: 0, left: 0, right: 0,
       child: Container(
@@ -424,20 +553,26 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
                 ),
               ),
             ),
-            _buildSystemTray(),
-            _buildClock(),
+            _buildSystemTray(iconSize),
+            _buildClock(fontSize),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSystemTray() {
-    final iconSize = ResponsiveHelper.isMobile(context) ? 14 : 18;
+  Widget _buildSystemTray(double iconSize) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
+          IconButton(
+            icon: const Icon(Icons.notifications, color: Colors.white),
+            onPressed: () => _openWindow('Notifications', const AdvancedNotificationCenter(), size: const Size(400, 600)),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+          const SizedBox(width: 8),
           Icon(Icons.battery_full, color: Colors.white, size: iconSize),
           SizedBox(width: ResponsiveHelper.isMobile(context) ? 4 : 8),
           Icon(Icons.wifi, color: Colors.white, size: iconSize),
@@ -448,8 +583,7 @@ class _ResponsiveDesktopState extends State<ResponsiveDesktop> {
     );
   }
 
-  Widget _buildClock() {
-    final fontSize = ResponsiveHelper.isMobile(context) ? 10 : 12;
+  Widget _buildClock(double fontSize) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -529,3 +663,7 @@ class DesktopWindow {
     required this.isMaximized,
   }) : savedSize = size, savedPosition = position;
 }
+
+// إضافة في قائمة icons في _buildDesktopIcons
+
+// إضافة في قائمة icons في _buildDesktopIcons
