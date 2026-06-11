@@ -67,7 +67,8 @@ class _TerminalAppState extends State<TerminalApp> {
     final command = _commandController.text.trim();
     if (command.isEmpty) return;
 
-    _addOutput('$_userName@$_hostName:$_currentDir$ command');
+    // استخدام سلسلة ثابتة بدون استخدام $ داخلها
+    _addOutput('[' + _userName + '@' + _hostName + ' ' + _currentDir + '] > ' + command);
     _commandController.clear();
     setState(() => _isProcessing = true);
 
@@ -92,6 +93,18 @@ class _TerminalAppState extends State<TerminalApp> {
       return;
     }
 
+    if (command == 'whoami') {
+      _addOutput(_userName);
+      setState(() => _isProcessing = false);
+      return;
+    }
+
+    if (command == 'hostname') {
+      _addOutput(_hostName);
+      setState(() => _isProcessing = false);
+      return;
+    }
+
     if (command.startsWith('cd ')) {
       await _changeDirectory(command.substring(3).trim());
       setState(() => _isProcessing = false);
@@ -104,10 +117,10 @@ class _TerminalAppState extends State<TerminalApp> {
         _addOutput(result.stdout.toString().trim());
       }
       if (result.stderr.toString().isNotEmpty) {
-        _addOutput('[ERROR] ${result.stderr.toString().trim()}');
+        _addOutput('[ERROR] ' + result.stderr.toString().trim());
       }
     } catch (e) {
-      _addOutput('[ERROR] Command not found: $command');
+      _addOutput('[ERROR] Command not found: ' + command);
     }
 
     setState(() => _isProcessing = false);
@@ -120,12 +133,12 @@ class _TerminalAppState extends State<TerminalApp> {
       final dir = Directory(newDir);
       if (await dir.exists()) {
         _currentDir = dir.path;
-        _addOutput('Changed to: $_currentDir');
+        _addOutput('Changed to: ' + _currentDir);
       } else {
-        _addOutput('Directory not found: $path');
+        _addOutput('Directory not found: ' + path);
       }
     } catch (_) {
-      _addOutput('Invalid directory: $path');
+      _addOutput('Invalid directory: ' + path);
     }
   }
 
@@ -136,6 +149,8 @@ class _TerminalAppState extends State<TerminalApp> {
     _addOutput('  help      - Show this help');
     _addOutput('  clear     - Clear screen');
     _addOutput('  pwd       - Show current directory');
+    _addOutput('  whoami    - Show current user');
+    _addOutput('  hostname  - Show hostname');
     _addOutput('  cd [dir]  - Change directory');
     _addOutput('═══════════════════════════════════════════════════════════════');
   }
@@ -182,7 +197,7 @@ class _TerminalAppState extends State<TerminalApp> {
                   ),
                 ),
                 Text(
-                  '$_userName@$_hostName',
+                  _userName + '@' + _hostName,
                   style: const TextStyle(color: Color(0xFF00BCD4), fontSize: 10, fontFamily: 'monospace'),
                 ),
               ],
