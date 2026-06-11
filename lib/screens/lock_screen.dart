@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'desktop_home.dart';
 
 class LockScreen extends StatefulWidget {
@@ -37,11 +36,11 @@ class _LockScreenState extends State<LockScreen> {
     if (_pinController.text == _correctPin) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const DesktopHome()),
+        MaterialPageRoute(builder: (context) => const ZionDesktop()),
       );
     } else {
       setState(() {
-        _errorMessage = "PIN غير صحيح";
+        _errorMessage = "PIN INCORRECT";
         _pinController.clear();
       });
       Future.delayed(const Duration(seconds: 2), () {
@@ -55,10 +54,10 @@ class _LockScreenState extends State<LockScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.black, Color(0xFF001a00)],
+          gradient: RadialGradient(
+            center: Alignment.center,
+            radius: 1.2,
+            colors: [Color(0xFF0D2E3B), Color(0xFF03090C)],
           ),
         ),
         child: SafeArea(
@@ -69,10 +68,10 @@ class _LockScreenState extends State<LockScreen> {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFF00FF41), Color(0xFF00CC33)]),
+                  gradient: const LinearGradient(colors: [Color(0xFF00BCD4), Color(0xFF006064)]),
                   shape: BoxShape.circle,
                   boxShadow: [
-                    BoxShadow(color: const Color(0xFF00FF41).withOpacity(0.5), blurRadius: 30),
+                    BoxShadow(color: const Color(0xFF00BCD4).withOpacity(0.5), blurRadius: 30),
                   ],
                 ),
                 child: const Center(
@@ -80,9 +79,9 @@ class _LockScreenState extends State<LockScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text("ZION OS", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF00FF41))),
+              const Text("ZION OS 2027", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF00BCD4))),
               const SizedBox(height: 50),
-              Text(_currentTime, style: const TextStyle(fontSize: 48, color: Color(0xFF00FF41), fontWeight: FontWeight.bold)),
+              Text(_currentTime, style: const TextStyle(fontSize: 48, color: Color(0xFF00BCD4), fontWeight: FontWeight.bold)),
               const SizedBox(height: 50),
               Container(
                 width: 280,
@@ -90,13 +89,13 @@ class _LockScreenState extends State<LockScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: const Color(0xFF00FF41).withOpacity(0.5)),
+                  border: Border.all(color: const Color(0xFF00BCD4).withOpacity(0.5)),
                 ),
                 child: TextField(
                   controller: _pinController,
                   obscureText: true,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Color(0xFF00FF41), fontSize: 24, letterSpacing: 10),
+                  style: const TextStyle(color: Color(0xFF00BCD4), fontSize: 24, letterSpacing: 10),
                   keyboardType: TextInputType.number,
                   maxLength: 4,
                   decoration: const InputDecoration(
@@ -154,10 +153,10 @@ class _LockScreenState extends State<LockScreen> {
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.05),
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: const Color(0xFF00FF41).withOpacity(0.3)),
+          border: Border.all(color: const Color(0xFF00BCD4).withOpacity(0.3)),
         ),
         child: Center(
-          child: Text(num, style: const TextStyle(color: Color(0xFF00FF41), fontSize: 28, fontWeight: FontWeight.bold)),
+          child: Text(num, style: const TextStyle(color: Color(0xFF00BCD4), fontSize: 28, fontWeight: FontWeight.bold)),
         ),
       ),
     );

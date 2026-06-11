@@ -1,5 +1,5 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'apps/terminal_app.dart';
 import 'apps/network_scanner.dart';
 import 'apps/wifi_scanner.dart';
@@ -12,416 +12,361 @@ import 'apps/forensics.dart';
 import 'apps/database_hacking.dart';
 import 'apps/cloud_attacks.dart';
 
-class DesktopHome extends StatefulWidget {
-  const DesktopHome({super.key});
-
-  @override
-  State<DesktopHome> createState() => _DesktopHomeState();
+void main() {
+  runApp(const ZionOSApp());
 }
 
-class _DesktopHomeState extends State<DesktopHome> with TickerProviderStateMixin {
-  String _currentTime = "";
-  String _currentDate = "";
-  int _selectedIndex = 0;
-  late AnimationController _holoController;
-  late AnimationController _scanController;
-  late Animation<double> _holoAnimation;
-  late Animation<double> _scanAnimation;
-  final Random _random = Random();
-
-  final List<Map<String, dynamic>> _categories = [
-    {"name": "⚡ ATTACK", "icon": Icons.flash_on, "color": 0xFF00FF41},
-    {"name": "🛡️ DEFENSE", "icon": Icons.shield, "color": 0xFF00FF41},
-    {"name": "📊 ANALYSIS", "icon": Icons.analytics, "color": 0xFF00FF41},
-    {"name": "🔧 TOOLS", "icon": Icons.build, "color": 0xFF00FF41},
-  ];
-
-  final List<Map<String, dynamic>> _apps = [
-    // Tools
-    {"name": "TERMINAL", "icon": Icons.terminal, "category": "🔧 TOOLS", "screen": const TerminalApp()},
-    {"name": "CRYPTO", "icon": Icons.lock, "category": "🔧 TOOLS", "screen": const CryptoToolApp()},
-    {"name": "SETTINGS", "icon": Icons.settings, "category": "🔧 TOOLS", "screen": null},
-    
-    // Attack
-    {"name": "WIFI", "icon": Icons.wifi, "category": "⚡ ATTACK", "screen": const WiFiScannerApp()},
-    {"name": "EXPLOIT", "icon": Icons.bug_report, "category": "⚡ ATTACK", "screen": const ExploitDBApp()},
-    {"name": "CRACKER", "icon": Icons.vpn_key, "category": "⚡ ATTACK", "screen": const PasswordCrackerApp()},
-    {"name": "DDOS", "icon": Icons.speed, "category": "⚡ ATTACK", "screen": const DDoSAttackApp()},
-    {"name": "DATABASE", "icon": Icons.storage, "category": "⚡ ATTACK", "screen": const DatabaseHackingApp()},
-    {"name": "CLOUD", "icon": Icons.cloud, "category": "⚡ ATTACK", "screen": const CloudAttacksApp()},
-    
-    // Analysis
-    {"name": "NETWORK", "icon": Icons.network_wifi, "category": "📊 ANALYSIS", "screen": const NetworkScannerApp()},
-    {"name": "FORENSICS", "icon": Icons.search, "category": "📊 ANALYSIS", "screen": const ForensicsApp()},
-    
-    // Defense
-    {"name": "STEALTH", "icon": Icons.visibility_off, "category": "🛡️ DEFENSE", "screen": const StealthModeApp()},
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _updateDateTime();
-    
-    _holoController = AnimationController(
-      duration: const Duration(seconds: 3),
-      vsync: this,
-    )..repeat(reverse: true);
-    _holoAnimation = Tween<double>(begin: 0.2, end: 0.7).animate(_holoController);
-    
-    _scanController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    )..repeat();
-    _scanAnimation = Tween<double>(begin: 0, end: 1).animate(_scanController);
-  }
-
-  @override
-  void dispose() {
-    _holoController.dispose();
-    _scanController.dispose();
-    super.dispose();
-  }
-
-  void _updateDateTime() {
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        final now = DateTime.now();
-        setState(() {
-          _currentTime = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}";
-          _currentDate = "${_getDay(now.weekday)} ${now.day} ${_getMonth(now.month)} ${now.year}";
-        });
-        _updateDateTime();
-      }
-    });
-  }
-
-  String _getDay(int weekday) {
-    const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-    return days[weekday - 1];
-  }
-
-  String _getMonth(int month) {
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    return months[month - 1];
-  }
-
-  void _openApp(Map<String, dynamic> app) {
-    if (app['screen'] != null) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => app['screen']));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('COMING SOON'), backgroundColor: Color(0xFF00FF41)),
-      );
-    }
-  }
+class ZionOSApp extends StatelessWidget {
+  const ZionOSApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final filteredApps = _apps.where((app) => app['category'] == _categories[_selectedIndex]['name']).toList();
+    return MaterialApp(
+      title: 'ZION OS 2027',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF0A0A0A),
+      ),
+      home: const ZionDesktop(),
+    );
+  }
+}
 
+class ZionDesktop extends StatelessWidget {
+  const ZionDesktop({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // خلفية Holographic
-          AnimatedBuilder(
-            animation: _holoAnimation,
-            builder: (context, child) {
-              return Container(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.center,
-                    radius: 1.5,
-                    colors: [
-                      const Color(0xFF00FF41).withOpacity(_holoAnimation.value * 0.15),
-                      Colors.black,
-                      Colors.black,
+          // خلفية متدرجة - سوداء مع لمسات تركوازية
+          Container(
+            decoration: const BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.center,
+                radius: 1.2,
+                colors: [
+                  Color(0xFF0D2E3B), // تركواز داكن
+                  Color(0xFF061217), // أسود مائل للتركواز
+                  Color(0xFF03090C),
+                ],
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              const ZionTopBar(),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      const ZionSearchBar(),
+                      const SizedBox(height: 25),
+                      const WorkspacesPreview(),
+                      const SizedBox(height: 35),
+                      const Expanded(child: ZionAppGrid()),
+                      const PageIndicator(),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
-                child: CustomPaint(
-                  painter: HolographicGridPainter(_scanAnimation.value),
-                ),
-              );
-            },
-          ),
-          
-          Column(
-            children: [
-              // شريط الحالة - تصميم 2027
-              Container(
-                height: 110,
-                padding: const EdgeInsets.fromLTRB(25, 50, 25, 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // الوقت والتاريخ
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AnimatedBuilder(
-                          animation: _holoAnimation,
-                          builder: (context, child) {
-                            return ShaderMask(
-                              shaderCallback: (rect) => LinearGradient(
-                                colors: [
-                                  const Color(0xFF00FF41),
-                                  const Color(0xFF00FF41).withOpacity(_holoAnimation.value),
-                                ],
-                              ).createShader(rect),
-                              child: Text(
-                                _currentTime,
-                                style: const TextStyle(
-                                  fontSize: 38,
-                                  fontWeight: FontWeight.w300,
-                                  letterSpacing: 4,
-                                  fontFamily: 'monospace',
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _currentDate,
-                          style: const TextStyle(color: Colors.white38, fontSize: 12, letterSpacing: 1),
-                        ),
-                      ],
-                    ),
-                    
-                    // شعار Zion holographic
-                    AnimatedBuilder(
-                      animation: _holoAnimation,
-                      builder: (context, child) {
-                        return Container(
-                          width: 55,
-                          height: 55,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xFF00FF41).withOpacity(0.3),
-                                const Color(0xFF00FF41).withOpacity(_holoAnimation.value),
-                              ],
-                            ),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF00FF41).withOpacity(_holoAnimation.value),
-                                blurRadius: 20,
-                              ),
-                            ],
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Z",
-                              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
               ),
-              
-              // Categories - تصميم Neo
-              Container(
-                height: 55,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _categories.length,
-                  itemBuilder: (context, index) {
-                    final isSelected = _selectedIndex == index;
-                    final category = _categories[index];
-                    return GestureDetector(
-                      onTap: () => setState(() => _selectedIndex = index),
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: isSelected 
-                              ? const Color(0xFF00FF41).withOpacity(0.15)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: isSelected 
-                                ? const Color(0xFF00FF41) 
-                                : const Color(0xFF00FF41).withOpacity(0.2),
-                            width: isSelected ? 1.5 : 0.5,
-                          ),
-                        ),
-                        child: Text(
-                          category['name'],
-                          style: TextStyle(
-                            color: isSelected ? const Color(0xFF00FF41) : Colors.white54,
-                            fontSize: 13,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              
-              const SizedBox(height: 20),
-              
-              // Grid - تصميم Holographic Cards
-              Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(20),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 0.85,
-                    crossAxisSpacing: 14,
-                    mainAxisSpacing: 14,
-                  ),
-                  itemCount: filteredApps.length,
-                  itemBuilder: (context, index) {
-                    final app = filteredApps[index];
-                    return _buildHolographicCard(app);
-                  },
-                ),
-              ),
-              
-              // شريط سفلي - Holographic Dock
-              Container(
-                height: 75,
-                margin: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.03),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: const Color(0xFF00FF41).withOpacity(0.15)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildDockItem(Icons.home, true, () {}),
-                    _buildDockItem(Icons.apps, false, () {}),
-                    _buildDockItem(Icons.notifications_none, false, () {}),
-                    _buildDockItem(Icons.grid_view, false, () {}),
-                    _buildDockItem(Icons.person_outline, false, () {}),
-                  ],
-                ),
-              ),
+              const ZionDock(),
+              const SizedBox(height: 15),
             ],
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildHolographicCard(Map<String, dynamic> app) {
-    return GestureDetector(
-      onTap: () => _openApp(app),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withOpacity(0.06),
-              Colors.white.withOpacity(0.02),
+// ============================================
+// الشريط العلوي - Top Bar (تركواز)
+// ============================================
+class ZionTopBar extends StatelessWidget {
+  const ZionTopBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 32,
+      color: Colors.black.withOpacity(0.85),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('ZION OS 2027', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xFF00BCD4))),
+          Text('SECURE MODE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: Color(0xFF00BCD4))),
+          Row(
+            children: [
+              Icon(Icons.network_wifi, size: 14, color: Color(0xFF00BCD4)),
+              SizedBox(width: 12),
+              Icon(Icons.battery_full, size: 14, color: Color(0xFF00BCD4)),
+              SizedBox(width: 12),
+              Icon(Icons.security, size: 14, color: Color(0xFF00BCD4)),
             ],
           ),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFF00FF41).withOpacity(0.15)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: 55,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      colors: [const Color(0xFF00FF41).withOpacity(0.15), Colors.transparent],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Icon(app['icon'], color: const Color(0xFF00FF41), size: 28),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              app['name'],
-              style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5),
-            ),
-            const SizedBox(height: 4),
-            Container(
-              width: 30,
-              height: 1,
-              color: const Color(0xFF00FF41).withOpacity(0.3),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildDockItem(IconData icon, bool isActive, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF00FF41).withOpacity(0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Icon(
-          icon,
-          color: isActive ? const Color(0xFF00FF41) : Colors.white38,
-          size: 22,
+// ============================================
+// شريط البحث - Search Bar (تركواز)
+// ============================================
+class ZionSearchBar extends StatelessWidget {
+  const ZionSearchBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 400,
+      height: 40,
+      child: TextField(
+        style: const TextStyle(fontSize: 14, color: Color(0xFF00BCD4)),
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.search, size: 18, color: Color(0xFF00BCD4)),
+          hintText: 'Type to search...',
+          hintStyle: const TextStyle(color: Color(0xFF00BCD4), fontSize: 13),
+          contentPadding: EdgeInsets.zero,
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.06),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(24),
+            borderSide: BorderSide.none,
+          ),
         ),
       ),
     );
   }
 }
 
-// تأثير Holographic Grid
-class HolographicGridPainter extends CustomPainter {
-  final double scanValue;
-  
-  HolographicGridPainter(this.scanValue);
-  
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF00FF41).withOpacity(0.04)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5;
-    
-    // خطوط أفقية
-    for (var i = 0; i < 20; i++) {
-      final y = i * size.height / 20;
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
-    }
-    
-    // خطوط عمودية
-    for (var i = 0; i < 15; i++) {
-      final x = i * size.width / 15;
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-    }
-    
-    // خط المسح الضوئي
-    final scanPaint = Paint()
-      ..color = const Color(0xFF00FF41).withOpacity(0.1)
-      ..style = PaintingStyle.fill;
-    
-    final scanY = scanValue * size.height;
-    canvas.drawRect(Rect.fromLTWH(0, scanY - 2, size.width, 4), scanPaint);
-  }
+// ============================================
+// معاينة أسطح المكتب - Workspaces Preview
+// ============================================
+class WorkspacesPreview extends StatelessWidget {
+  const WorkspacesPreview({super.key});
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildWorkspaceCard(isActive: true),
+        const SizedBox(width: 20),
+        _buildWorkspaceCard(isActive: false),
+      ],
+    );
+  }
+
+  Widget _buildWorkspaceCard({required bool isActive}) {
+    return Container(
+      width: 170,
+      height: 100,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A2A2F),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: isActive ? const Color(0xFF00BCD4).withOpacity(0.6) : Colors.white.withOpacity(0.05),
+          width: 1.5,
+        ),
+        boxShadow: isActive
+            ? [
+                BoxShadow(
+                  color: const Color(0xFF00BCD4).withOpacity(0.15),
+                  blurRadius: 12,
+                  spreadRadius: 2,
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 6,
+                  offset: const Offset(0, 4),
+                )
+              ]
+            : [],
+      ),
+      child: Center(
+        child: Icon(
+          Icons.grid_view,
+          size: 20,
+          color: isActive ? const Color(0xFF00BCD4).withOpacity(0.6) : Colors.white.withOpacity(0.15),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================
+// شبكة التطبيقات - App Grid (تركواز)
+// ============================================
+class ZionAppGrid extends StatelessWidget {
+  const ZionAppGrid({super.key});
+
+  static const List<Map<String, dynamic>> apps = [
+    {'name': 'TERMINAL', 'icon': Icons.terminal, 'gradient': [Color(0xFF00838F), Color(0xFF004D40)]},
+    {'name': 'NETWORK', 'icon': Icons.network_wifi, 'gradient': [Color(0xFF00ACC1), Color(0xFF006064)]},
+    {'name': 'WIFI', 'icon': Icons.wifi, 'gradient': [Color(0xFF26C6DA), Color(0xFF00838F)]},
+    {'name': 'EXPLOIT', 'icon': Icons.bug_report, 'gradient': [Color(0xFF00838F), Color(0xFF00363A)]},
+    {'name': 'CRYPTO', 'icon': Icons.lock, 'gradient': [Color(0xFF00BCD4), Color(0xFF006064)]},
+    {'name': 'STEALTH', 'icon': Icons.visibility_off, 'gradient': [Color(0xFF004D40), Color(0xFF001F1A)]},
+    {'name': 'CRACKER', 'icon': Icons.vpn_key, 'gradient': [Color(0xFF00ACC1), Color(0xFF004D40)]},
+    {'name': 'DDOS', 'icon': Icons.speed, 'gradient': [Color(0xFF26C6DA), Color(0xFF006064)]},
+    {'name': 'FORENSICS', 'icon': Icons.search, 'gradient': [Color(0xFF00838F), Color(0xFF001F1A)]},
+    {'name': 'DATABASE', 'icon': Icons.storage, 'gradient': [Color(0xFF00BCD4), Color(0xFF00363A)]},
+    {'name': 'CLOUD', 'icon': Icons.cloud, 'gradient': [Color(0xFF00ACC1), Color(0xFF004D40)]},
+    {'name': 'SETTINGS', 'icon': Icons.settings, 'gradient': [Color(0xFF006064), Color(0xFF001F1A)]},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 6,
+        mainAxisSpacing: 25,
+        crossAxisSpacing: 25,
+        childAspectRatio: 0.9,
+      ),
+      itemCount: apps.length,
+      itemBuilder: (context, index) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 55,
+              height: 55,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: apps[index]['gradient'],
+                ),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF00BCD4).withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  )
+                ],
+              ),
+              child: Icon(apps[index]['icon'], color: Colors.white, size: 28),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              apps[index]['name'],
+              style: const TextStyle(fontSize: 11, color: Color(0xFFB2EBF2), letterSpacing: 0.5),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// ============================================
+// مؤشر الصفحات - Page Indicator
+// ============================================
+class PageIndicator extends StatelessWidget {
+  const PageIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 7,
+          height: 7,
+          decoration: const BoxDecoration(color: Color(0xFF00BCD4), shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 10),
+        Container(
+          width: 7,
+          height: 7,
+          decoration: BoxDecoration(color: const Color(0xFF00BCD4).withOpacity(0.25), shape: BoxShape.circle),
+        ),
+      ],
+    );
+  }
+}
+
+// ============================================
+// الشريط السفلي - The Dock (زجاجي - تركواز)
+// ============================================
+class ZionDock extends StatelessWidget {
+  const ZionDock({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> dockApps = [
+      {'name': 'TERM', 'icon': Icons.terminal},
+      {'name': 'NET', 'icon': Icons.network_wifi},
+      {'name': 'WIFI', 'icon': Icons.wifi},
+      {'name': 'LOCK', 'icon': Icons.lock},
+      {'name': 'HIDE', 'icon': Icons.visibility_off},
+      {'name': 'KEY', 'icon': Icons.vpn_key},
+    ];
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+        child: Container(
+          height: 62,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.35),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFF00BCD4).withOpacity(0.15), width: 1),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...dockApps.map((app) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Container(
+                      width: 46,
+                      height: 46,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0xFF00BCD4), Color(0xFF006064)],
+                        ),
+                        borderRadius: BorderRadius.circular(11),
+                      ),
+                      child: Icon(app['icon'], color: Colors.white, size: 24),
+                    ),
+                  )),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                width: 1,
+                color: const Color(0xFF00BCD4).withOpacity(0.2),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Container(
+                  width: 46,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00BCD4).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.apps, color: Color(0xFF00BCD4), size: 22),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
