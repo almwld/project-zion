@@ -243,8 +243,8 @@ class _FloatingRadarChartState extends State<FloatingRadarChart> {
               ),
               Container(
                 height: 24,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.8),
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
                 ),
@@ -254,7 +254,7 @@ class _FloatingRadarChartState extends State<FloatingRadarChart> {
                     children: _titles.map((title) {
                       double val = _metrics[title] ?? 0;
                       return Padding(
-                        padding: const EdgeInsets.only(right: 8),
+                        padding: EdgeInsets.only(right: 8),
                         child: Text('$title: ${(val * 100).toStringAsFixed(0)}%', style: TextStyle(color: _colors[_titles.indexOf(title)], fontSize: 9)),
                       );
                     }).toList(),
