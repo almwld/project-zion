@@ -5,6 +5,7 @@ import 'apps/wifi_scanner.dart';
 import 'apps/exploit_db.dart';
 import 'apps/crypto_tool.dart';
 import 'apps/stealth_mode.dart';
+import 'apps/settings_app.dart';
 import 'apps/password_cracker.dart';
 import 'apps/ddos_attack.dart';
 import 'apps/forensics.dart';
@@ -48,6 +49,7 @@ class _ZionDesktopState extends State<ZionDesktop> {
     
     // Defense
     {"name": "STEALTH", "icon": Icons.visibility_off, "category": "DEFENSE", "screen": const StealthModeApp()},
+    {"name": "SETTINGS", "icon": Icons.settings, "category": "TOOLS", "screen": const SettingsApp()},
   ];
 
   @override
