@@ -6,10 +6,10 @@ class FloatingWindowManager extends StatefulWidget {
   const FloatingWindowManager({super.key, required this.child});
 
   @override
-  State<FloatingWindowManager> createState() => _FloatingWindowManagerState();
+  State<FloatingWindowManager> createState() => FloatingWindowManagerState();
 }
 
-class _FloatingWindowManagerState extends State<FloatingWindowManager> {
+class FloatingWindowManagerState extends State<FloatingWindowManager> {
   final List<FloatingWindowInstance> _windows = [];
   int _nextId = 0;
 
