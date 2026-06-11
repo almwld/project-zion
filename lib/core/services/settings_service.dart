@@ -1,7 +1,7 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsService {
+class SettingsService extends ChangeNotifier {
   static final SettingsService _instance = SettingsService._internal();
   factory SettingsService() => _instance;
   SettingsService._internal();
@@ -16,7 +16,7 @@ class SettingsService {
   bool _biometricEnabled = false;
   bool _autoLockEnabled = true;
   int _autoLockTimeout = 30;
-  bool _encryptionEnabled = true;
+  String _pinCode = '1234';
   
   // Notification Settings
   bool _pushNotifications = true;
@@ -26,15 +26,13 @@ class SettingsService {
   // Privacy Settings
   bool _incognitoMode = false;
   bool _clearHistoryOnExit = false;
-  bool _hideActivities = false;
   
   // Performance Settings
   bool _animationsEnabled = true;
-  bool _backgroundProcesses = true;
   String _performanceMode = 'Balanced';
   
   // Display Settings
-  String _language = 'ar';
+  String _language = 'en';
   String _dateFormat = 'DD/MM/YYYY';
   String _timeFormat = '24h';
   
@@ -45,195 +43,90 @@ class SettingsService {
   Future<void> _loadAllSettings() async {
     final prefs = await SharedPreferences.getInstance();
     
-    // Theme
     _darkMode = prefs.getBool('dark_mode') ?? true;
     _themeColor = prefs.getString('theme_color') ?? 'Turquoise';
     _fontFamily = prefs.getString('font_family') ?? 'Default';
     _fontSize = prefs.getDouble('font_size') ?? 14.0;
-    
-    // Security
     _biometricEnabled = prefs.getBool('biometric_enabled') ?? false;
     _autoLockEnabled = prefs.getBool('auto_lock_enabled') ?? true;
     _autoLockTimeout = prefs.getInt('auto_lock_timeout') ?? 30;
-    _encryptionEnabled = prefs.getBool('encryption_enabled') ?? true;
-    
-    // Notification
+    _pinCode = prefs.getString('pin_code') ?? '1234';
     _pushNotifications = prefs.getBool('push_notifications') ?? true;
     _soundEnabled = prefs.getBool('sound_enabled') ?? true;
     _vibrationEnabled = prefs.getBool('vibration_enabled') ?? true;
-    
-    // Privacy
     _incognitoMode = prefs.getBool('incognito_mode') ?? false;
     _clearHistoryOnExit = prefs.getBool('clear_history_on_exit') ?? false;
-    _hideActivities = prefs.getBool('hide_activities') ?? false;
-    
-    // Performance
     _animationsEnabled = prefs.getBool('animations_enabled') ?? true;
-    _backgroundProcesses = prefs.getBool('background_processes') ?? true;
     _performanceMode = prefs.getString('performance_mode') ?? 'Balanced';
-    
-    // Display
-    _language = prefs.getString('language') ?? 'ar';
+    _language = prefs.getString('language') ?? 'en';
     _dateFormat = prefs.getString('date_format') ?? 'DD/MM/YYYY';
     _timeFormat = prefs.getString('time_format') ?? '24h';
+    
+    notifyListeners();
   }
   
-  Future<void> saveAllSettings() async {
+  Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    
-    // Theme
     await prefs.setBool('dark_mode', _darkMode);
     await prefs.setString('theme_color', _themeColor);
     await prefs.setString('font_family', _fontFamily);
     await prefs.setDouble('font_size', _fontSize);
-    
-    // Security
     await prefs.setBool('biometric_enabled', _biometricEnabled);
     await prefs.setBool('auto_lock_enabled', _autoLockEnabled);
     await prefs.setInt('auto_lock_timeout', _autoLockTimeout);
-    await prefs.setBool('encryption_enabled', _encryptionEnabled);
-    
-    // Notification
+    await prefs.setString('pin_code', _pinCode);
     await prefs.setBool('push_notifications', _pushNotifications);
     await prefs.setBool('sound_enabled', _soundEnabled);
     await prefs.setBool('vibration_enabled', _vibrationEnabled);
-    
-    // Privacy
     await prefs.setBool('incognito_mode', _incognitoMode);
     await prefs.setBool('clear_history_on_exit', _clearHistoryOnExit);
-    await prefs.setBool('hide_activities', _hideActivities);
-    
-    // Performance
     await prefs.setBool('animations_enabled', _animationsEnabled);
-    await prefs.setBool('background_processes', _backgroundProcesses);
     await prefs.setString('performance_mode', _performanceMode);
-    
-    // Display
     await prefs.setString('language', _language);
     await prefs.setString('date_format', _dateFormat);
     await prefs.setString('time_format', _timeFormat);
+    notifyListeners();
   }
   
-  // Getters and Setters
+  // Getters
   bool get darkMode => _darkMode;
-  set darkMode(bool value) {
-    _darkMode = value;
-    saveAllSettings();
-  }
-  
   String get themeColor => _themeColor;
-  set themeColor(String value) {
-    _themeColor = value;
-    saveAllSettings();
-  }
-  
   String get fontFamily => _fontFamily;
-  set fontFamily(String value) {
-    _fontFamily = value;
-    saveAllSettings();
-  }
-  
   double get fontSize => _fontSize;
-  set fontSize(double value) {
-    _fontSize = value;
-    saveAllSettings();
-  }
-  
   bool get biometricEnabled => _biometricEnabled;
-  set biometricEnabled(bool value) {
-    _biometricEnabled = value;
-    saveAllSettings();
-  }
-  
   bool get autoLockEnabled => _autoLockEnabled;
-  set autoLockEnabled(bool value) {
-    _autoLockEnabled = value;
-    saveAllSettings();
-  }
-  
   int get autoLockTimeout => _autoLockTimeout;
-  set autoLockTimeout(int value) {
-    _autoLockTimeout = value;
-    saveAllSettings();
-  }
-  
-  bool get encryptionEnabled => _encryptionEnabled;
-  set encryptionEnabled(bool value) {
-    _encryptionEnabled = value;
-    saveAllSettings();
-  }
-  
+  String get pinCode => _pinCode;
   bool get pushNotifications => _pushNotifications;
-  set pushNotifications(bool value) {
-    _pushNotifications = value;
-    saveAllSettings();
-  }
-  
   bool get soundEnabled => _soundEnabled;
-  set soundEnabled(bool value) {
-    _soundEnabled = value;
-    saveAllSettings();
-  }
-  
   bool get vibrationEnabled => _vibrationEnabled;
-  set vibrationEnabled(bool value) {
-    _vibrationEnabled = value;
-    saveAllSettings();
-  }
-  
   bool get incognitoMode => _incognitoMode;
-  set incognitoMode(bool value) {
-    _incognitoMode = value;
-    saveAllSettings();
-  }
-  
   bool get clearHistoryOnExit => _clearHistoryOnExit;
-  set clearHistoryOnExit(bool value) {
-    _clearHistoryOnExit = value;
-    saveAllSettings();
-  }
-  
-  bool get hideActivities => _hideActivities;
-  set hideActivities(bool value) {
-    _hideActivities = value;
-    saveAllSettings();
-  }
-  
   bool get animationsEnabled => _animationsEnabled;
-  set animationsEnabled(bool value) {
-    _animationsEnabled = value;
-    saveAllSettings();
-  }
-  
-  bool get backgroundProcesses => _backgroundProcesses;
-  set backgroundProcesses(bool value) {
-    _backgroundProcesses = value;
-    saveAllSettings();
-  }
-  
   String get performanceMode => _performanceMode;
-  set performanceMode(String value) {
-    _performanceMode = value;
-    saveAllSettings();
-  }
-  
   String get language => _language;
-  set language(String value) {
-    _language = value;
-    saveAllSettings();
-  }
-  
   String get dateFormat => _dateFormat;
-  set dateFormat(String value) {
-    _dateFormat = value;
-    saveAllSettings();
-  }
-  
   String get timeFormat => _timeFormat;
-  set timeFormat(String value) {
-    _timeFormat = value;
-    saveAllSettings();
-  }
+  
+  // Setters
+  set darkMode(bool value) { _darkMode = value; _saveSettings(); }
+  set themeColor(String value) { _themeColor = value; _saveSettings(); }
+  set fontFamily(String value) { _fontFamily = value; _saveSettings(); }
+  set fontSize(double value) { _fontSize = value; _saveSettings(); }
+  set biometricEnabled(bool value) { _biometricEnabled = value; _saveSettings(); }
+  set autoLockEnabled(bool value) { _autoLockEnabled = value; _saveSettings(); }
+  set autoLockTimeout(int value) { _autoLockTimeout = value; _saveSettings(); }
+  set pinCode(String value) { _pinCode = value; _saveSettings(); }
+  set pushNotifications(bool value) { _pushNotifications = value; _saveSettings(); }
+  set soundEnabled(bool value) { _soundEnabled = value; _saveSettings(); }
+  set vibrationEnabled(bool value) { _vibrationEnabled = value; _saveSettings(); }
+  set incognitoMode(bool value) { _incognitoMode = value; _saveSettings(); }
+  set clearHistoryOnExit(bool value) { _clearHistoryOnExit = value; _saveSettings(); }
+  set animationsEnabled(bool value) { _animationsEnabled = value; _saveSettings(); }
+  set performanceMode(String value) { _performanceMode = value; _saveSettings(); }
+  set language(String value) { _language = value; _saveSettings(); }
+  set dateFormat(String value) { _dateFormat = value; _saveSettings(); }
+  set timeFormat(String value) { _timeFormat = value; _saveSettings(); }
   
   Future<void> resetToDefault() async {
     _darkMode = true;
@@ -243,19 +136,17 @@ class SettingsService {
     _biometricEnabled = false;
     _autoLockEnabled = true;
     _autoLockTimeout = 30;
-    _encryptionEnabled = true;
+    _pinCode = '1234';
     _pushNotifications = true;
     _soundEnabled = true;
     _vibrationEnabled = true;
     _incognitoMode = false;
     _clearHistoryOnExit = false;
-    _hideActivities = false;
     _animationsEnabled = true;
-    _backgroundProcesses = true;
     _performanceMode = 'Balanced';
-    _language = 'ar';
+    _language = 'en';
     _dateFormat = 'DD/MM/YYYY';
     _timeFormat = '24h';
-    await saveAllSettings();
+    await _saveSettings();
   }
 }
