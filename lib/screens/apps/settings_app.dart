@@ -27,8 +27,6 @@ class _SettingsAppState extends State<SettingsApp> {
   final List<Map<String, dynamic>> _languages = [
     {'code': 'ar', 'name': 'العربية', 'flag': '🇸🇦'},
     {'code': 'en', 'name': 'English', 'flag': '🇬🇧'},
-    {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
-    {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
   ];
 
   @override
@@ -51,27 +49,6 @@ class _SettingsAppState extends State<SettingsApp> {
       _fontSize = prefs.getInt('font_size') ?? 14;
       _currentPin = prefs.getString('user_pin') ?? '1234';
     });
-    _applyThemeColor();
-    _applyFontSize();
-  }
-
-  void _applyThemeColor() {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    Color primaryColor;
-    switch (_selectedThemeColor) {
-      case 'Turquoise': primaryColor = const Color(0xFF00BCD4); break;
-      case 'Cyan': primaryColor = Colors.cyan; break;
-      case 'Green': primaryColor = Colors.green; break;
-      case 'Blue': primaryColor = Colors.blue; break;
-      case 'Purple': primaryColor = Colors.purple; break;
-      case 'Orange': primaryColor = Colors.orange; break;
-      default: primaryColor = const Color(0xFF00BCD4);
-    }
-    themeProvider.setPrimaryColor(primaryColor);
-  }
-
-  void _applyFontSize() {
-    // سيتم تطبيق حجم الخط في جميع أنحاء التطبيق
   }
 
   Future<void> _saveSetting(String key, dynamic value) async {
@@ -81,7 +58,7 @@ class _SettingsAppState extends State<SettingsApp> {
     if (value is double) await prefs.setDouble(key, value);
     if (value is int) await prefs.setInt(key, value);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$key ${'saved'.tr()}'), backgroundColor: const Color(0xFF00BCD4)),
+      SnackBar(content: Text('$key ${'common.saved'.tr()}'), backgroundColor: const Color(0xFF00BCD4)),
     );
   }
 
@@ -99,7 +76,7 @@ class _SettingsAppState extends State<SettingsApp> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('change_pin'.tr(), style: const TextStyle(color: Color(0xFF00BCD4))),
+        title: Text('settings.change_pin'.tr(), style: const TextStyle(color: Color(0xFF00BCD4))),
         backgroundColor: Colors.black,
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -109,7 +86,7 @@ class _SettingsAppState extends State<SettingsApp> {
               obscureText: true,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                labelText: 'current_pin'.tr(),
+                labelText: 'settings.current_pin'.tr(),
                 labelStyle: const TextStyle(color: Color(0xFF00BCD4)),
                 border: const OutlineInputBorder(),
               ),
@@ -120,7 +97,7 @@ class _SettingsAppState extends State<SettingsApp> {
               obscureText: true,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                labelText: 'new_pin'.tr(),
+                labelText: 'settings.new_pin'.tr(),
                 labelStyle: const TextStyle(color: Color(0xFF00BCD4)),
                 border: const OutlineInputBorder(),
               ),
@@ -131,7 +108,7 @@ class _SettingsAppState extends State<SettingsApp> {
               obscureText: true,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                labelText: 'confirm_pin'.tr(),
+                labelText: 'settings.confirm_pin'.tr(),
                 labelStyle: const TextStyle(color: Color(0xFF00BCD4)),
                 border: const OutlineInputBorder(),
               ),
@@ -141,7 +118,7 @@ class _SettingsAppState extends State<SettingsApp> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('cancel'.tr(), style: const TextStyle(color: Colors.white54)),
+            child: Text('common.cancel'.tr(), style: const TextStyle(color: Colors.white54)),
           ),
           TextButton(
             onPressed: () async {
@@ -165,7 +142,7 @@ class _SettingsAppState extends State<SettingsApp> {
                 );
               }
             },
-            child: Text('save'.tr(), style: const TextStyle(color: Color(0xFF00BCD4))),
+            child: Text('common.save'.tr(), style: const TextStyle(color: Color(0xFF00BCD4))),
           ),
         ],
       ),
@@ -180,59 +157,51 @@ class _SettingsAppState extends State<SettingsApp> {
     return Scaffold(
       backgroundColor: isDark ? Colors.black : Colors.grey[100],
       appBar: AppBar(
-        title: Text('settings'.tr(), style: TextStyle(color: themeProvider.primaryColor)),
+        title: Text('settings.title'.tr(), style: const TextStyle(color: Color(0xFF00BCD4))),
         backgroundColor: isDark ? Colors.black : Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: themeProvider.primaryColor),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF00BCD4)),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: ListView(
         children: [
-          _buildSectionHeader(Icons.palette, 'appearance'.tr()),
-          _buildSwitchTile('dark_mode'.tr(), isDark, (v) => themeProvider.toggleTheme()),
+          _buildSectionHeader(Icons.palette, 'settings.appearance'.tr()),
+          _buildSwitchTile('settings.dark_mode'.tr(), isDark, (v) => themeProvider.toggleTheme()),
           _buildThemeSelector(),
           _buildLanguageSelector(),
           _buildFontSizeSlider(),
           
-          _buildSectionHeader(Icons.tune, 'behavior'.tr()),
-          _buildSwitchTile('notifications'.tr(), _notifications, (v) {
+          _buildSectionHeader(Icons.tune, 'settings.behavior'.tr()),
+          _buildSwitchTile('settings.notifications'.tr(), _notifications, (v) {
             setState(() { _notifications = v; _saveSetting('notifications', v); });
           }),
-          _buildSwitchTile('sound_effects'.tr(), _soundEffects, (v) {
+          _buildSwitchTile('settings.sound_effects'.tr(), _soundEffects, (v) {
             setState(() { _soundEffects = v; _saveSetting('sound_effects', v); });
           }),
-          _buildSwitchTile('vibration'.tr(), _vibration, (v) {
+          _buildSwitchTile('settings.vibration'.tr(), _vibration, (v) {
             setState(() { _vibration = v; _saveSetting('vibration', v); });
           }),
-          _buildSwitchTile('auto_update'.tr(), _autoUpdate, (v) {
+          _buildSwitchTile('settings.auto_update'.tr(), _autoUpdate, (v) {
             setState(() { _autoUpdate = v; _saveSetting('auto_update', v); });
           }),
-          _buildSwitchTile('stealth_mode'.tr(), _stealthMode, (v) {
+          _buildSwitchTile('settings.stealth_mode'.tr(), _stealthMode, (v) {
             setState(() { _stealthMode = v; _saveSetting('stealth_mode', v); });
           }),
           
-          _buildSliderTile('animation_speed'.tr(), _animationSpeed, 0.5, 2.0, (v) {
+          _buildSliderTile('settings.animation_speed'.tr(), _animationSpeed, 0.5, 2.0, (v) {
             setState(() { _animationSpeed = v; _saveSetting('animation_speed', v); });
           }),
           
-          _buildSectionHeader(Icons.security, 'security'.tr()),
-          _buildInfoTile(Icons.lock, 'change_pin'.tr(), 'update_security_pin'.tr(), _showChangePinDialog),
-          _buildInfoTile(Icons.fingerprint, 'biometric'.tr(), 'enable_fingerprint'.tr(), () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Coming soon'), backgroundColor: Color(0xFF00BCD4)),
-            );
-          }),
-          _buildInfoTile(Icons.security, 'encryption'.tr(), 'aes256_active'.tr(), () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Encryption is active'), backgroundColor: Color(0xFF00BCD4)),
-            );
-          }),
+          _buildSectionHeader(Icons.security, 'settings.security'.tr()),
+          _buildInfoTile(Icons.lock, 'settings.change_pin'.tr(), 'settings.update_security_pin'.tr(), _showChangePinDialog),
+          _buildInfoTile(Icons.fingerprint, 'settings.biometric'.tr(), 'settings.enable_fingerprint'.tr(), () {}),
+          _buildInfoTile(Icons.security, 'settings.encryption'.tr(), 'settings.aes256_active'.tr(), () {}),
           
-          _buildSectionHeader(Icons.info, 'about'.tr()),
-          _buildInfoTile(Icons.info, 'version'.tr(), 'Zion OS 4.0.0', () {}),
-          _buildInfoTile(Icons.build, 'build'.tr(), '2027.06.11', () {}),
-          _buildInfoTile(Icons.code, 'developer'.tr(), 'Zion Security Team', () {}),
+          _buildSectionHeader(Icons.info, 'settings.about'.tr()),
+          _buildInfoTile(Icons.info, 'settings.version'.tr(), 'Zion OS 4.0.0', () {}),
+          _buildInfoTile(Icons.build, 'settings.build'.tr(), '2027.06.11', () {}),
+          _buildInfoTile(Icons.code, 'settings.developer'.tr(), 'Zion Security Team', () {}),
           
           const SizedBox(height: 20),
           
@@ -243,12 +212,12 @@ class _SettingsAppState extends State<SettingsApp> {
                 final confirmed = await showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text('reset'.tr(), style: const TextStyle(color: Color(0xFF00BCD4))),
-                    content: Text('reset_confirm'.tr(), style: const TextStyle(color: Colors.white)),
+                    title: Text('settings.reset'.tr(), style: const TextStyle(color: Color(0xFF00BCD4))),
+                    content: Text('settings.reset_confirm'.tr(), style: const TextStyle(color: Colors.white)),
                     backgroundColor: Colors.black,
                     actions: [
-                      TextButton(onPressed: () => Navigator.pop(context, false), child: Text('cancel'.tr(), style: const TextStyle(color: Colors.white54))),
-                      TextButton(onPressed: () => Navigator.pop(context, true), child: Text('reset'.tr(), style: const TextStyle(color: Colors.red))),
+                      TextButton(onPressed: () => Navigator.pop(context, false), child: Text('common.cancel'.tr(), style: const TextStyle(color: Colors.white54))),
+                      TextButton(onPressed: () => Navigator.pop(context, true), child: Text('settings.reset'.tr(), style: const TextStyle(color: Colors.red))),
                     ],
                   ),
                 );
@@ -257,12 +226,12 @@ class _SettingsAppState extends State<SettingsApp> {
                   await prefs.clear();
                   await _loadSettings();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('reset_done'.tr()), backgroundColor: Color(0xFF00BCD4)),
+                    const SnackBar(content: Text('settings.reset_done'.tr()), backgroundColor: Color(0xFF00BCD4)),
                   );
                 }
               },
               icon: const Icon(Icons.restore),
-              label: Text('reset'.tr()),
+              label: Text('settings.reset'.tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -351,12 +320,12 @@ class _SettingsAppState extends State<SettingsApp> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Theme Color', style: TextStyle(color: Color(0xFF00BCD4), fontSize: 14)),
+          Text('settings.theme_color'.tr(), style: const TextStyle(color: Color(0xFF00BCD4), fontSize: 14)),
           const SizedBox(height: 10),
           Wrap(
             spacing: 10,
             children: _themeColors.map((color) => GestureDetector(
-              onTap: () => setState(() { _selectedThemeColor = color; _saveSetting('theme_color', color); _applyThemeColor(); }),
+              onTap: () => setState(() { _selectedThemeColor = color; _saveSetting('theme_color', color); }),
               child: Container(
                 width: 40,
                 height: 40,
@@ -385,7 +354,7 @@ class _SettingsAppState extends State<SettingsApp> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Language', style: TextStyle(color: Colors.white, fontSize: 14)),
+          Text('settings.language'.tr(), style: const TextStyle(color: Colors.white, fontSize: 14)),
           DropdownButton<String>(
             value: _selectedLanguage,
             dropdownColor: Colors.black,
@@ -422,7 +391,7 @@ class _SettingsAppState extends State<SettingsApp> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Font Size', style: TextStyle(color: Color(0xFF00BCD4), fontSize: 14)),
+              Text('settings.font_size'.tr(), style: const TextStyle(color: Color(0xFF00BCD4), fontSize: 14)),
               Text('$_fontSize', style: const TextStyle(color: Color(0xFF00BCD4))),
             ],
           ),
@@ -433,7 +402,7 @@ class _SettingsAppState extends State<SettingsApp> {
             divisions: 10,
             activeColor: const Color(0xFF00BCD4),
             onChanged: (v) {
-              setState(() { _fontSize = v.toInt(); _saveSetting('font_size', v.toInt()); _applyFontSize(); });
+              setState(() { _fontSize = v.toInt(); _saveSetting('font_size', v.toInt()); });
             },
           ),
         ],
